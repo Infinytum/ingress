@@ -16,7 +16,7 @@ func (k *KubeStore) Delete(ctx context.Context, key string) error {
 		return err
 	}
 
-	name := cleanKey(key)
+	name := generateSecretName(key)
 	_, err = client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {

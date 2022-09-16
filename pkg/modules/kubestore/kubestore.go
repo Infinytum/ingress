@@ -11,7 +11,10 @@ var labels = map[string]string{
 	"infinytum.co/managed": "true",
 }
 
-const dataKey = "data"
+const (
+	dataKey = "data"
+	nameKey = "name"
+)
 
 type KubeStore struct {
 	LeaseId string

@@ -5,7 +5,7 @@ import (
 
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
-	"github.com/infinytum/ingress/pkg/caddy"
+	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 	"github.com/mholt/acmez/acme"
 )
@@ -16,7 +16,7 @@ func TLS() reactive.Pipe {
 			return errs
 		}
 
-		caddy.Edit(func(config *caddy.Config) {
+		config.Edit(func(config *config.Config) {
 			tlsApp := config.GetTLSApp()
 			acmeIssuer := caddytls.ACMEIssuer{}
 

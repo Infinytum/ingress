@@ -4,7 +4,7 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/infinytum/ingress/pkg/utils"
+	"github.com/infinytum/ingress/internal/annotations"
 	"github.com/infinytum/reactive"
 	v1 "k8s.io/api/networking/v1"
 )
@@ -20,7 +20,7 @@ func SpecificMatcher() reactive.Pipe {
 		modMap := caddy.ModuleMap{}
 
 		// Configure HTTPS-only listener if SSL redirect is enabled
-		if utils.GetAnnotationBool(ctx.Ingress.ObjectMeta, utils.AnnotationSSLRedirect, true) {
+		if annotations.GetAnnotationBool(ctx.Ingress.ObjectMeta, annotations.AnnotationSSLRedirect, true) {
 			modMap["protocol"] = caddyconfig.JSON(caddyhttp.MatchProtocol("https"), nil)
 		}
 

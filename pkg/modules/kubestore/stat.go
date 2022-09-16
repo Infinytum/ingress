@@ -17,7 +17,7 @@ func (k *KubeStore) Stat(ctx context.Context, key string) (certmagic.KeyInfo, er
 		return certmagic.KeyInfo{}, err
 	}
 
-	name := cleanKey(key)
+	name := generateSecretName(key)
 	secret, err := client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {

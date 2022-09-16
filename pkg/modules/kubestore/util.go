@@ -14,6 +14,9 @@ const (
 var specialChars = regexp.MustCompile(`[^\da-zA-Z-]+`)
 
 func cleanKey(key string) string {
-	key = specialChars.ReplaceAllString(key, ".")
-	return fmt.Sprintf(keyFormat, key)
+	return specialChars.ReplaceAllString(key, ".")
+}
+
+func generateSecretName(key string) string {
+	return fmt.Sprintf(keyFormat, cleanKey(key))
 }

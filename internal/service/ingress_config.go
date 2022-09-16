@@ -8,16 +8,16 @@ import (
 	v1 "k8s.io/api/core/v1"
 )
 
+func init() {
+	injector.Singleton(newConfig)
+}
+
 var (
 	className  = flag.String("class-name", "", "class name of the ingress controller")
 	kubeConfig = flag.String("kube-config", "", "path to kube config file")
 	namespace  = flag.String("namespace", v1.NamespaceAll, "namespace to watch for ingress resources")
 	configMap  = flag.String("config-map", "infinytum-ingress-cfg", "name of the config map to use for configuration")
 )
-
-func init() {
-	injector.Singleton(newConfig)
-}
 
 type IngressConfig struct {
 	// Ingress ClassName to use

@@ -17,7 +17,7 @@ func (k *KubeStore) Exists(ctx context.Context, key string) bool {
 		return false
 	}
 
-	name := cleanKey(key)
+	name := generateSecretName(key)
 	_, err = client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {

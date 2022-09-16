@@ -19,16 +19,7 @@ const (
 )
 
 func init() {
-	injector.Singleton(func(config IngressConfig) *kubernetes.Clientset {
-		client, err := createApiserverClient(config)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if client == nil {
-			log.Fatal("Kubernetes Clientset was nil")
-		}
-		return client
-	})
+	injector.Singleton(newClientSet)
 }
 
 func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) {
@@ -82,4 +73,18 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 	}
 
 	return client, nil
+}
+
+func newClientSet() (client *kubernetes.Clientset) {
+	injector.MustCall(func(config IngressConfig) {
+		c, err := createApiserverClient(config)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if c == nil {
+			log.Fatal("Kubernetes Clientset was nil")
+		}
+		client = c
+	})
+	return
 }

@@ -19,7 +19,7 @@ const (
 )
 
 func (k *KubeStore) Lock(ctx context.Context, key string) error {
-	key = cleanKey(key)
+	key = generateSecretName(key)
 	for {
 		_, err := k.tryAcquireOrRenew(ctx, key, false)
 		if err == nil {

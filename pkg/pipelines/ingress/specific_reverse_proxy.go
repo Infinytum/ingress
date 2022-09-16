@@ -6,7 +6,7 @@ import (
 
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy"
-	"github.com/infinytum/ingress/pkg/utils"
+	"github.com/infinytum/ingress/internal/annotations"
 	"github.com/infinytum/reactive"
 )
 
@@ -28,13 +28,13 @@ func SpecificReverseProxy() reactive.Pipe {
 		transport := &reverseproxy.HTTPTransport{}
 
 		// Configure backend protocol, if supported
-		backend := utils.GetAnnotationOrDefault(ctx.Ingress.ObjectMeta, utils.AnnotationBackendProtocol, string(BackendHTTP))
+		backend := annotations.GetAnnotationOrDefault(ctx.Ingress.ObjectMeta, annotations.AnnotationBackendProtocol, string(BackendHTTP))
 		switch SupportedBackend(backend) {
 		case BackendHTTP: // Do nothing
 			break
 		case BackendHTTPS:
 			transport.TLS = &reverseproxy.TLSConfig{
-				InsecureSkipVerify: utils.GetAnnotationBool(ctx.Ingress.ObjectMeta, utils.AnnotationInsecureSkipVerify, true),
+				InsecureSkipVerify: annotations.GetAnnotationBool(ctx.Ingress.ObjectMeta, annotations.AnnotationInsecureSkipVerify, true),
 			}
 		default:
 			return append(errs, errors.New("Unsupported backend protocol: "+backend))

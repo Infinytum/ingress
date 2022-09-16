@@ -14,6 +14,6 @@ func (k *KubeStore) Unlock(ctx context.Context, key string) error {
 		return err
 	}
 
-	key = cleanKey(key)
+	key = generateSecretName(key)
 	return client.CoordinationV1().Leases(k.Namespace()).Delete(ctx, key, metav1.DeleteOptions{})
 }

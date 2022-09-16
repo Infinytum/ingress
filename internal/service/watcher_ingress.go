@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/signals"
-	"github.com/infinytum/ingress/pkg/pipelines"
 	"github.com/infinytum/injector"
 	networkingv1 "k8s.io/api/networking/v1"
 	"k8s.io/client-go/informers"
@@ -18,16 +17,17 @@ const (
 )
 
 func init() {
-	injector.Singleton(newK8sIngress)
+	injector.Singleton(newIngressWatcher)
 }
 
-type K8sIngress struct {
-	config   IngressConfig
-	pipeline *pipelines.Ingress
+type IngressWatcher struct {
+	config          IngressConfig          `injector:"type"`
+	onIngressDelete signals.IngressDeleted `injector:"type"`
+	onIngressUpdate signals.IngressUpdated `injector:"type"`
 }
 
 // IsManagedByController returns true if the ingress resource has the correct ingress class
-func (k *K8sIngress) IsManagedByController(ingress networkingv1.Ingress) bool {
+func (k *IngressWatcher) IsManagedByController(ingress networkingv1.Ingress) bool {
 	ingressClass := ingress.Annotations["kubernetes.io/ingress.class"]
 	if ingressClass == "" && ingress.Spec.IngressClassName != nil {
 		ingressClass = *ingress.Spec.IngressClassName
@@ -35,48 +35,53 @@ func (k *K8sIngress) IsManagedByController(ingress networkingv1.Ingress) bool {
 	return ingressClass == k.config.ClassName
 }
 
-func (k *K8sIngress) onAdd(obj interface{}) {
+func (k *IngressWatcher) onAdd(obj interface{}) {
 	ingress, ok := obj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
 		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Info("Discovered ingress")
-		k.pipeline.Configure(ingress)
+		if k.onIngressUpdate != nil {
+			k.onIngressUpdate(ingress)
+		}
 	}
 }
 
-func (k *K8sIngress) onUpdate(oldObj, newObj interface{}) {
+func (k *IngressWatcher) onUpdate(oldObj, newObj interface{}) {
 	ingress, ok := newObj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
 		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Info("Updated ingress")
-		k.pipeline.Configure(ingress)
+		if k.onIngressUpdate != nil {
+			k.onIngressUpdate(ingress)
+		}
 	}
 }
 
-func (k *K8sIngress) onDelete(obj interface{}) {
+func (k *IngressWatcher) onDelete(obj interface{}) {
 	ingress, ok := obj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
 		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Info("Deleted ingress")
-		k.pipeline.Delete(ingress)
+		if k.onIngressDelete != nil {
+			k.onIngressDelete(ingress)
+		}
 	}
 }
 
-func newK8sIngress(clientset *kubernetes.Clientset, config IngressConfig, ingPipeline *pipelines.Ingress) *K8sIngress {
-	k := &K8sIngress{
-		config:   config,
-		pipeline: ingPipeline,
-	}
+func newIngressWatcher() *IngressWatcher {
+	k := &IngressWatcher{}
+	injector.MustFill(k)
+	injector.MustCall(func(clientset *kubernetes.Clientset, config IngressConfig) {
+		informer := informers.NewSharedInformerFactoryWithOptions(
+			clientset,
+			resourcesSyncInterval,
+			informers.WithNamespace(config.Namespace),
+		).Networking().V1().Ingresses().Informer()
 
-	informer := informers.NewSharedInformerFactoryWithOptions(
-		clientset,
-		resourcesSyncInterval,
-		informers.WithNamespace(config.Namespace),
-	).Networking().V1().Ingresses().Informer()
+		informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+			AddFunc:    k.onAdd,
+			UpdateFunc: k.onUpdate,
+			DeleteFunc: k.onDelete,
+		})
 
-	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc:    k.onAdd,
-		UpdateFunc: k.onUpdate,
-		DeleteFunc: k.onDelete,
+		go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
 	})
-
-	go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
 	return k
 }

@@ -1,12 +1,9 @@
-package caddy
+package config
 
 import (
-	"encoding/json"
-
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
-	"github.com/go-mojito/mojito/log"
 )
 
 var config Config
@@ -60,17 +57,4 @@ func (c Config) GetTLSApp() *caddytls.TLS {
 // Storage represents the certmagic storage configuration.
 type Storage struct {
 	System string `json:"module"`
-}
-
-func Reload() {
-	j, err := json.Marshal(config)
-	if err != nil {
-		log.Errorf("Failed to marshal config: %v", err)
-		return
-	}
-	err = caddy.Load(j, false)
-	if err != nil {
-		log.Errorf("Failed to load config: %v", err)
-		return
-	}
 }

@@ -1,10 +1,13 @@
-package caddy
+package config
 
 import (
+	"encoding/json"
 	"sync"
 	"time"
 
 	"github.com/bep/debounce"
+	"github.com/caddyserver/caddy/v2"
+	"github.com/go-mojito/mojito/log"
 )
 
 var rwlock sync.RWMutex = sync.RWMutex{}
@@ -26,4 +29,17 @@ func Edit(editor func(config *Config)) {
 func Read() Config {
 	copy := config
 	return copy
+}
+
+func Reload() {
+	j, err := json.Marshal(config)
+	if err != nil {
+		log.Errorf("Failed to marshal config: %v", err)
+		return
+	}
+	err = caddy.Load(j, false)
+	if err != nil {
+		log.Errorf("Failed to load config: %v", err)
+		return
+	}
 }

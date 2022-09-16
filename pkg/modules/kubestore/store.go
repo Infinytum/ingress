@@ -16,14 +16,13 @@ func (k *KubeStore) Store(ctx context.Context, key string, value []byte) error {
 		return err
 	}
 
-	name := cleanKey(key)
+	name := generateSecretName(key)
 	secret, err := client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 
-	if err != nil && !errors.IsNotFound(err) {
-		return err
-	}
-
-	if secret == nil || errors.IsNotFound(err) {
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return err
+		}
 		secret, err = client.CoreV1().Secrets(k.Namespace()).Create(ctx, &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:   name,
@@ -41,6 +40,7 @@ func (k *KubeStore) Store(ctx context.Context, key string, value []byte) error {
 	}
 
 	secret.Data[dataKey] = value
+	secret.Data[nameKey] = []byte(key)
 	_, err = client.CoreV1().Secrets(k.Namespace()).Update(ctx, secret, metav1.UpdateOptions{})
 	return err
 }

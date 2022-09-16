@@ -16,7 +16,7 @@ func (k *KubeStore) Load(ctx context.Context, key string) ([]byte, error) {
 		return nil, err
 	}
 
-	name := cleanKey(key)
+	name := generateSecretName(key)
 	secret, err := client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {

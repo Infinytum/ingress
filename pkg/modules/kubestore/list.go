@@ -26,8 +26,8 @@ func (k *KubeStore) List(ctx context.Context, prefix string, recursive bool) ([]
 
 	var keys []string
 	for _, secret := range secrets.Items {
-		if strings.HasPrefix(secret.Name, prefix) {
-			keys = append(keys, secret.Name)
+		if strings.HasPrefix(secret.Name, cleanKey(prefix)) {
+			keys = append(keys, string(secret.Data[nameKey]))
 		}
 	}
 

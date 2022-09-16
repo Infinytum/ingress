@@ -6,11 +6,7 @@ import (
 	"github.com/infinytum/injector"
 )
 
-var podInfo PodInfo = PodInfo{}
-
 func init() {
-	podInfo.Name = os.Getenv("POD_NAME")
-	podInfo.Namespace = os.Getenv("POD_NAMESPACE")
 	injector.Singleton(newPodInfo)
 }
 
@@ -22,5 +18,8 @@ type PodInfo struct {
 }
 
 func newPodInfo() PodInfo {
-	return podInfo
+	return PodInfo{
+		Name:      os.Getenv("POD_NAME"),
+		Namespace: os.Getenv("POD_NAMESPACE"),
+	}
 }

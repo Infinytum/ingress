@@ -4,14 +4,14 @@ import (
 	"strings"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/infinytum/ingress/pkg/caddy"
+	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 )
 
 // GlobalApply applies the routes to the caddy server
 func GlobalApply() reactive.Pipe {
 	return GlobalPipe(func(ctx *GlobalContext, errs []error) []error {
-		caddy.Edit(func(c *caddy.Config) {
+		config.Edit(func(c *config.Config) {
 			app := c.GetHTTPApp()
 			existingRoutes := extractRoutes(string(ctx.Ingress.UID), app)
 			if len(existingRoutes) > 0 {

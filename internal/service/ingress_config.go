@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	injector.Singleton(newConfig)
+	injector.Singleton(newIngressConfig)
 }
 
 var (
@@ -35,7 +35,7 @@ func (c IngressConfig) String() string {
 	return string(s)
 }
 
-func newConfig() IngressConfig {
+func newIngressConfig() IngressConfig {
 	flag.Parse()
 	return IngressConfig{
 		ClassName:  *className,

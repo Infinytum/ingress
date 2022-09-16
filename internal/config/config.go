@@ -1,6 +1,8 @@
 package config
 
 import (
+	"encoding/json"
+
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
@@ -9,7 +11,6 @@ import (
 var config Config
 
 func init() {
-
 	config = Config{
 		Admin: caddy.AdminConfig{},
 		Storage: Storage{
@@ -18,7 +19,9 @@ func init() {
 		Logging: caddy.Logging{
 			Logs: map[string]*caddy.CustomLog{
 				"default": {
-					Level: "WARN",
+					WriterRaw:  json.RawMessage(`{"output":"mojito_log"}`),
+					EncoderRaw: json.RawMessage(`{"format":"json"}`),
+					Level:      "WARN",
 				},
 			},
 		},

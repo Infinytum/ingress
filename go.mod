@@ -10,6 +10,7 @@ require (
 	github.com/go-mojito/mojito v0.0.13
 	github.com/infinytum/injector v0.0.2
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
+	github.com/mholt/acmez v1.0.4
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.28.0
@@ -87,7 +88,6 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
-	github.com/mholt/acmez v1.0.4 // indirect
 	github.com/micromdm/scep/v2 v2.1.0 // indirect
 	github.com/miekg/dns v1.1.50 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
@@ -141,6 +141,7 @@ require (
 	google.golang.org/grpc v1.46.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

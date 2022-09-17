@@ -3,7 +3,9 @@ package ingress
 import (
 	"errors"
 	"fmt"
+	"time"
 
+	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy"
 	"github.com/infinytum/ingress/internal/annotations"
@@ -25,7 +27,11 @@ func SpecificReverseProxy() reactive.Pipe {
 			return errs
 		}
 
-		transport := &reverseproxy.HTTPTransport{}
+		transport := &reverseproxy.HTTPTransport{
+			KeepAlive: &reverseproxy.KeepAlive{
+				MaxIdleConnsPerHost: 1024,
+			},
+		}
 
 		// Configure backend protocol, if supported
 		backend := annotations.GetAnnotationOrDefault(ctx.Ingress.ObjectMeta, annotations.AnnotationBackendProtocol, string(BackendHTTP))
@@ -47,6 +53,9 @@ func SpecificReverseProxy() reactive.Pipe {
 				TransportRaw: caddyconfig.JSONModuleObject(transport, "protocol", "http", nil),
 				Upstreams: reverseproxy.UpstreamPool{
 					{Dial: fmt.Sprintf("%v.%v.svc.cluster.local:%d", ctx.Path.Backend.Service.Name, ctx.Ingress.Namespace, ctx.Path.Backend.Service.Port.Number)},
+				},
+				LoadBalancing: &reverseproxy.LoadBalancing{
+					TryDuration: caddy.Duration(time.Second * 5),
 				},
 			},
 			"handler",

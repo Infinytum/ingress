@@ -13,16 +13,22 @@ func GlobalApply() reactive.Pipe {
 	return GlobalPipe(func(ctx *GlobalContext, errs []error) []error {
 		config.Edit(func(c *config.Config) {
 			app := c.GetHTTPApp()
-			existingRoutes := extractRoutes(string(ctx.Ingress.UID), app)
-			if len(existingRoutes) > 0 {
-				// Protect against race conditions
-				if !ctx.IsNewer(existingRoutes[0].Group) {
-					ctx.Routes = existingRoutes // Use existing routes since they are newer
+
+			routes := make([]caddyhttp.Route, 0)
+			routesExist := false
+			for _, route := range app.Routes {
+				if !routesExist && strings.HasPrefix(route.Group, string(ctx.Ingress.UID)) {
+					if !ctx.IsNewer(route.Group) {
+						routesExist = true
+						routes = append(routes, route)
+					}
+				} else {
+					routes = append(routes, route)
 				}
 			}
 
-			// Only configure new routes if the ingress is being configured
-			if ctx.Mode == ContextModeConfigure {
+			app.Routes = routes
+			if !routesExist && ctx.Mode == ContextModeConfigure {
 				for _, route := range ctx.Routes {
 					app.Routes = append(app.Routes, *route)
 				}
@@ -30,19 +36,4 @@ func GlobalApply() reactive.Pipe {
 		})
 		return errs
 	})
-}
-
-// extractRoutes extracts all routes that belong to the given ingress uid
-func extractRoutes(uid string, c *caddyhttp.Server) []*caddyhttp.Route {
-	routes := make([]*caddyhttp.Route, 0)
-	newRoutes := make([]caddyhttp.Route, 0)
-	for _, route := range c.Routes {
-		if strings.HasPrefix(route.Group, uid) {
-			routes = append(routes, &route)
-		} else {
-			newRoutes = append(newRoutes, route)
-		}
-	}
-	c.Routes = newRoutes
-	return routes
 }

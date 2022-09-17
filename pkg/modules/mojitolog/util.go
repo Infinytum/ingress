@@ -6,7 +6,7 @@ func extractLevelAndMessage(log map[string]interface{}) (string, string, map[str
 	delete(log, "level")
 	delete(log, "msg")
 	delete(log, "ts") // Mojito provides its own timestamp
-	return level.(string), message.(string), log
+	return level.(string), "[Caddy] " + message.(string), log
 }
 
 func flatten(m map[string]interface{}, fields map[string]interface{}, prefix string) map[string]interface{} {

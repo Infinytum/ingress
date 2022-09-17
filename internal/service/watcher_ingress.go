@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	resourcesSyncInterval = time.Hour
+	resourcesSyncInterval = time.Minute * 30
 )
 
 func init() {

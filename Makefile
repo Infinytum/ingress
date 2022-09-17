@@ -33,7 +33,7 @@ build-and-push: build push
 
 run:
 	@printf "$(blue)Running ingress locally$(reset)\n"
-	@POD_NAME="localhost-dev" POD_NAMESPACE="infinytum-system" go run main.go --kube-config ~/.kube/config --config-map=infinytum-ingress-controller-configmap $(if $(class-name),--class-name=$(class-name),"") $(if $(namespace),--namespace=$(namespace),"")
+	@POD_NAME="localhost-dev" POD_NAMESPACE="infinytum-system" go run main.go --kube-config ~/.kube/config --config-map=infinytum-ingress-controller-configmap --nginx-annotations=true $(if $(class-name),--class-name=$(class-name),"") $(if $(namespace),--namespace=$(namespace),"")
  
 security:
 	@printf "$(blue)Scanning code for vulnerabilities...$(reset)\n"

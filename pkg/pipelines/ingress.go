@@ -55,6 +55,7 @@ func ingressFactory() *Ingress {
 	i.pipeline.Pipe(
 		ingress.SpecificMarker(),
 		ingress.SpecificMatcher(),
+		ingress.SpecificHeaders(),
 		ingress.SpecificReverseProxy(), // Must be last, because it creates the final route
 	)
 

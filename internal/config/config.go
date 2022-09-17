@@ -29,11 +29,27 @@ func init() {
 			"tls": &caddytls.TLS{CertificatesRaw: caddy.ModuleMap{}},
 			"http": &caddyhttp.App{
 				Servers: map[string]*caddyhttp.Server{
-					"http_server": {
-						AutoHTTPS: &caddyhttp.AutoHTTPSConfig{},
-						Listen:    []string{":80", ":443"},
+					"https_server": {
+						AutoHTTPS: &caddyhttp.AutoHTTPSConfig{
+							DisableRedir: true,
+						},
+						Listen: []string{":443"},
 						TLSConnPolicies: caddytls.ConnectionPolicies{
 							&caddytls.ConnectionPolicy{},
+						},
+					},
+					"http_server": {
+						AutoHTTPS: &caddyhttp.AutoHTTPSConfig{
+							Disabled: true,
+						},
+						Listen: []string{":80"},
+						Routes: []caddyhttp.Route{
+							{
+								HandlersRaw: []json.RawMessage{
+									json.RawMessage(`{"handler": "headers","response": {"deferred": true,"set": { "Server": ["Infinytum Gate"] }}}`),
+									json.RawMessage(`{"handler": "static_response","headers": {"Location": ["https://{http.request.host}{http.request.uri}"]},"status_code": 302}`),
+								},
+							},
 						},
 					},
 				},
@@ -50,7 +66,7 @@ type Config struct {
 }
 
 func (c Config) GetHTTPApp() *caddyhttp.Server {
-	return c.Apps["http"].(*caddyhttp.App).Servers["http_server"]
+	return c.Apps["http"].(*caddyhttp.App).Servers["https_server"]
 }
 
 func (c Config) GetTLSApp() *caddytls.TLS {

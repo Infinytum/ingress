@@ -9,10 +9,15 @@ import (
 )
 
 var config Config
+var persist = false
 
 func init() {
 	config = Config{
-		Admin: caddy.AdminConfig{},
+		Admin: caddy.AdminConfig{
+			Config: &caddy.ConfigSettings{
+				Persist: &persist,
+			},
+		},
 		Storage: Storage{
 			System: "kubestore",
 		},

@@ -14,9 +14,10 @@ func init() {
 
 var (
 	className        = flag.String("class-name", "", "class name of the ingress controller")
+	configMap        = flag.String("config-map", "infinytum-ingress-cfg", "name of the config map to use for configuration")
+	http3            = flag.Bool("http3", true, "enable experimental http3 support")
 	kubeConfig       = flag.String("kube-config", "", "path to kube config file")
 	namespace        = flag.String("namespace", v1.NamespaceAll, "namespace to watch for ingress resources")
-	configMap        = flag.String("config-map", "infinytum-ingress-cfg", "name of the config map to use for configuration")
 	nginxAnnotations = flag.Bool("nginx-annotations", false, "enables the ingress to use some nginx-specific annotations")
 )
 
@@ -25,6 +26,7 @@ type IngressConfig struct {
 	ClassName string
 	// ConfigMap to watch for configuration changes
 	ConfigMap string
+	HTTP3     bool
 	// Path to kube config file (useful for development outside of a kubernetes cluster)
 	KubeConfig string
 	// Namespace to watch for ingress resources
@@ -43,6 +45,7 @@ func newIngressConfig() IngressConfig {
 	return IngressConfig{
 		ClassName:        *className,
 		ConfigMap:        *configMap,
+		HTTP3:            *http3,
 		KubeConfig:       *kubeConfig,
 		Namespace:        *namespace,
 		NginxAnnotations: *nginxAnnotations,

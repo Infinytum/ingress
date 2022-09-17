@@ -21,7 +21,7 @@ func init() {
 				"default": {
 					WriterRaw:  json.RawMessage(`{"output":"mojito_log"}`),
 					EncoderRaw: json.RawMessage(`{"format":"json"}`),
-					Level:      "WARN",
+					Level:      "INFO",
 				},
 			},
 		},

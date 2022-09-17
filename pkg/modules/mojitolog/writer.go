@@ -17,6 +17,10 @@ func (m *MojitoWriter) Write(p []byte) (n int, err error) {
 		return 0, err
 	}
 
+	if filter(rawLog) {
+		return len(p), nil
+	}
+
 	lvl, msg, rawFields := extractLevelAndMessage(rawLog)
 	fields := make(map[string]interface{})
 	flatten(rawFields, fields, "")

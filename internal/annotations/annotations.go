@@ -2,6 +2,7 @@ package annotations
 
 import (
 	"encoding/json"
+	"strconv"
 	"strings"
 
 	"github.com/go-mojito/mojito/log"
@@ -16,10 +17,12 @@ const (
 	annotationNamespace = "infinytum.ingress.kubernetes.io"
 	nginxNamespace      = "nginx.ingress.kubernetes.io"
 
-	AnnotationSSLRedirect        Annotation = "ssl-redirect"
-	AnnotationBackendProtocol    Annotation = "backend-protocol"
-	AnnotationInsecureSkipVerify Annotation = "insecure-skip-verify"
-	AnnotationProxyHTTPVersion   Annotation = "proxy-http-version"
+	AnnotationBackendProtocol          Annotation = "backend-protocol"
+	AnnotationInsecureSkipVerify       Annotation = "insecure-skip-verify"
+	AnnotationKeepAlive                Annotation = "keepalive"
+	AnnotationProxyHTTPVersion         Annotation = "proxy-http-version"
+	AnnotationProxyNextUpstreamTimeout Annotation = "proxy-next-upstream-timeout"
+	AnnotationSSLRedirect              Annotation = "ssl-redirect"
 )
 
 var namespaces = []string{annotationNamespace}
@@ -61,6 +64,24 @@ func GetAnnotationBool(t metav1.ObjectMeta, annotation Annotation, def bool) boo
 		return def
 	}
 	return val == "true"
+}
+
+// GetAnnotationInt returns the int value of the specified annotation
+// or if the annotation does not exist, the specified default
+func GetAnnotationInt(t metav1.ObjectMeta, annotation Annotation, def int) int {
+	val := GetAnnotation(t, annotation)
+	if val == "" {
+		return def
+	}
+	intVal, err := strconv.Atoi(val)
+	if err != nil {
+		log.
+			Field("ingress", t.Name).
+			Field("namespace", t.Namespace).
+			Field("annotation", annotation).Errorf("Error parsing annotation: %s", err)
+		return def
+	}
+	return intVal
 }
 
 // GetAnnotationList returns the list of values specified in the annotation

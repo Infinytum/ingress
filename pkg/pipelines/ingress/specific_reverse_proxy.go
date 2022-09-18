@@ -29,7 +29,7 @@ func SpecificReverseProxy() reactive.Pipe {
 
 		transport := &reverseproxy.HTTPTransport{
 			KeepAlive: &reverseproxy.KeepAlive{
-				MaxIdleConnsPerHost: 1024,
+				MaxIdleConnsPerHost: annotations.GetAnnotationInt(ctx.Ingress.ObjectMeta, annotations.AnnotationKeepAlive, 1024),
 			},
 			Versions: annotations.GetAnnotationList(ctx.Ingress.ObjectMeta, annotations.AnnotationProxyHTTPVersion, []string{"1.1", "2"}),
 		}
@@ -56,7 +56,7 @@ func SpecificReverseProxy() reactive.Pipe {
 					{Dial: fmt.Sprintf("%v.%v.svc.cluster.local:%d", ctx.Path.Backend.Service.Name, ctx.Ingress.Namespace, ctx.Path.Backend.Service.Port.Number)},
 				},
 				LoadBalancing: &reverseproxy.LoadBalancing{
-					TryDuration: caddy.Duration(time.Second * 5),
+					TryDuration: caddy.Duration(time.Second * time.Duration(annotations.GetAnnotationInt(ctx.Ingress.ObjectMeta, annotations.AnnotationProxyNextUpstreamTimeout, 5))),
 				},
 			},
 			"handler",

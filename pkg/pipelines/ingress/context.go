@@ -25,15 +25,27 @@ type Context struct {
 }
 
 func (s Context) IsNewer(routeIdentifier string) bool {
-	generation, err := strconv.Atoi(strings.Split(routeIdentifier, "--")[1])
+	parts := strings.Split(routeIdentifier, "--")
+	resourceVersion := parts[2]
+	generation, err := strconv.Atoi(parts[1])
 	if err != nil {
 		return true
 	}
-	return s.Ingress.Generation > int64(generation)
+
+	if s.Ingress.Generation > int64(generation) {
+		return true
+	}
+
+	// Only apply resource version updates when generation is the same
+	// This is to prevent race conditions.
+	if s.Ingress.Generation == int64(generation) && s.Ingress.ResourceVersion != resourceVersion {
+		return true
+	}
+	return false
 }
 
 func (s Context) RouteIdentifier() string {
-	return fmt.Sprintf("%s--%d", s.Ingress.UID, s.Ingress.Generation)
+	return fmt.Sprintf("%s--%d--%s", s.Ingress.UID, s.Ingress.Generation, s.Ingress.ResourceVersion)
 }
 
 type GlobalContext struct {

@@ -31,6 +31,7 @@ func SpecificReverseProxy() reactive.Pipe {
 			KeepAlive: &reverseproxy.KeepAlive{
 				MaxIdleConnsPerHost: 1024,
 			},
+			Versions: annotations.GetAnnotationList(ctx.Ingress.ObjectMeta, annotations.AnnotationProxyHTTPVersion, []string{"1.1", "2"}),
 		}
 
 		// Configure backend protocol, if supported

@@ -1,6 +1,10 @@
 package annotations
 
 import (
+	"encoding/json"
+	"strings"
+
+	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/service"
 	"github.com/infinytum/injector"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -15,6 +19,7 @@ const (
 	AnnotationSSLRedirect        Annotation = "ssl-redirect"
 	AnnotationBackendProtocol    Annotation = "backend-protocol"
 	AnnotationInsecureSkipVerify Annotation = "insecure-skip-verify"
+	AnnotationProxyHTTPVersion   Annotation = "proxy-http-version"
 )
 
 var namespaces = []string{annotationNamespace}
@@ -56,6 +61,31 @@ func GetAnnotationBool(t metav1.ObjectMeta, annotation Annotation, def bool) boo
 		return def
 	}
 	return val == "true"
+}
+
+// GetAnnotationList returns the list of values specified in the annotation
+// or if the annotation does not exist, the specified default
+func GetAnnotationList(t metav1.ObjectMeta, annotation Annotation, def []string) (res []string) {
+	val := GetAnnotation(t, annotation)
+	if val == "" {
+		return def
+	}
+	if strings.HasPrefix(val, "[") {
+		if err := json.Unmarshal([]byte(val), &res); err != nil {
+			log.
+				Field("ingress", t.Name).
+				Field("namespace", t.Namespace).
+				Field("annotation", annotation).Errorf("Error parsing annotation: %s", err)
+			return def
+		}
+		return res
+	}
+
+	if strings.Contains(val, ",") {
+		return strings.Split(val, ",")
+	}
+
+	return []string{val}
 }
 
 // HasAnnotation checks if the given annotation exists on the given object

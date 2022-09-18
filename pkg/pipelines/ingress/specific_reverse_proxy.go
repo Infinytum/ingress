@@ -58,6 +58,7 @@ func SpecificReverseProxy() reactive.Pipe {
 				LoadBalancing: &reverseproxy.LoadBalancing{
 					TryDuration: caddy.Duration(time.Second * time.Duration(annotations.GetAnnotationInt(ctx.Ingress.ObjectMeta, annotations.AnnotationProxyNextUpstreamTimeout, 5))),
 				},
+				TrustedProxies: annotations.GetAnnotationList(ctx.Ingress.ObjectMeta, annotations.AnnotationTrustedProxies, []string{}),
 			},
 			"handler",
 			"reverse_proxy",

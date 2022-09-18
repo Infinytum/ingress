@@ -23,6 +23,7 @@ const (
 	AnnotationProxyHTTPVersion         Annotation = "proxy-http-version"
 	AnnotationProxyNextUpstreamTimeout Annotation = "proxy-next-upstream-timeout"
 	AnnotationSSLRedirect              Annotation = "ssl-redirect"
+	AnnotationTrustedProxies           Annotation = "trusted-proxies"
 )
 
 var namespaces = []string{annotationNamespace}

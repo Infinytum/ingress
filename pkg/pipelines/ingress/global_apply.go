@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
+	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 )
@@ -29,6 +30,7 @@ func GlobalApply() reactive.Pipe {
 
 			app.Routes = routes
 			if !routesExist && ctx.Mode == ContextModeConfigure {
+				log.Field("name", ctx.Ingress.Name).Field("namespace", ctx.Ingress.Namespace).Info("Reconfigured routes")
 				for _, route := range ctx.Routes {
 					app.Routes = append(app.Routes, *route)
 				}

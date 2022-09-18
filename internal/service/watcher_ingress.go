@@ -48,7 +48,7 @@ func (k *IngressWatcher) onAdd(obj interface{}) {
 func (k *IngressWatcher) onUpdate(oldObj, newObj interface{}) {
 	ingress, ok := newObj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
-		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Info("Updated ingress")
+		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Debug("Updated ingress")
 		if k.onIngressUpdate != nil {
 			k.onIngressUpdate(ingress)
 		}

@@ -30,7 +30,9 @@ var config Config = Config{
 		},
 	},
 	Apps: map[string]interface{}{
-		"tls": &caddytls.TLS{CertificatesRaw: caddy.ModuleMap{}},
+		"tls": &caddytls.TLS{CertificatesRaw: caddy.ModuleMap{
+			"load_storage": json.RawMessage(`{"pairs": []}`),
+		}},
 		"http": &caddyhttp.App{
 			Servers: map[string]*caddyhttp.Server{
 				"https_server": {
@@ -65,24 +67,4 @@ func init() {
 	injector.MustCall(func(ingressCfg service.IngressConfig) {
 		config.GetHTTPApp().ExperimentalHTTP3 = ingressCfg.HTTP3
 	})
-}
-
-type Config struct {
-	Admin   caddy.AdminConfig      `json:"admin,omitempty"`
-	Storage Storage                `json:"storage"`
-	Apps    map[string]interface{} `json:"apps"`
-	Logging caddy.Logging          `json:"logging"`
-}
-
-func (c Config) GetHTTPApp() *caddyhttp.Server {
-	return c.Apps["http"].(*caddyhttp.App).Servers["https_server"]
-}
-
-func (c Config) GetTLSApp() *caddytls.TLS {
-	return c.Apps["tls"].(*caddytls.TLS)
-}
-
-// Storage represents the certmagic storage configuration.
-type Storage struct {
-	System string `json:"module"`
 }

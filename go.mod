@@ -117,6 +117,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 	github.com/tailscale/tscert v0.0.0-20220316030059-54bbcb9f74e2 // indirect
+	github.com/thoas/go-funk v0.9.2 // indirect
 	github.com/urfave/cli v1.22.5 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
 	go.mozilla.org/pkcs7 v0.0.0-20210826202110-33d05740a352 // indirect

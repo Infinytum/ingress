@@ -49,6 +49,7 @@ func ingressFactory() *Ingress {
 	i.pipeline.Pipe(
 		ingress.GlobalDiffuser(i.pipeline), // Calls the specific pipeline
 		ingress.GlobalApply(),
+		ingress.GlobalCustomTLS(),
 		ingress.GlobalStatus(),
 	)
 

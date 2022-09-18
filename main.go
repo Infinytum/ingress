@@ -32,6 +32,8 @@ func main() {
 		log.Infof("Loaded config: %+v", cfg)
 	})
 
+	log.Info("Creating Pod Watcher")
+	_ = injector.MustInject[*service.PodWatcher]()
 	log.Info("Creating ConfigMap Watcher")
 	_ = injector.MustInject[*service.ConfigMapWatcher]()
 	log.Info("Creating Ingress Watcher")

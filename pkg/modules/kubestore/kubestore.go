@@ -21,8 +21,7 @@ type KubeStore struct {
 }
 
 func (KubeStore) Namespace() string {
-	podInfo := injector.MustInject[service.PodInfo]()
-	return podInfo.Namespace
+	return injector.MustInject[*service.PodWatcher]().Namespace()
 }
 
 func (KubeStore) CaddyModule() caddy.ModuleInfo {

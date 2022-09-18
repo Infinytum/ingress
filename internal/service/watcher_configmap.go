@@ -46,11 +46,11 @@ func (k *ConfigMapWatcher) onUpdate(oldObj, newObj interface{}) {
 func newConfigMapWatcher() *ConfigMapWatcher {
 	k := &ConfigMapWatcher{}
 	injector.MustFill(k)
-	injector.MustCall(func(clientset *kubernetes.Clientset, podinfo PodInfo) {
+	injector.MustCall(func(clientset *kubernetes.Clientset, podWatcher *PodWatcher) {
 		informer := informers.NewSharedInformerFactoryWithOptions(
 			clientset,
 			resourcesSyncInterval,
-			informers.WithNamespace(podinfo.Namespace),
+			informers.WithNamespace(podWatcher.Namespace()),
 		).Core().V1().ConfigMaps().Informer()
 
 		informer.AddEventHandler(cache.ResourceEventHandlerFuncs{

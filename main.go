@@ -4,7 +4,6 @@ import (
 	_ "github.com/caddyserver/caddy/v2/modules/logging"
 	_ "github.com/infinytum/ingress/internal/wiring"
 
-	"github.com/infinytum/ingress/internal/config"
 	"k8s.io/client-go/kubernetes"
 
 	zerolog "github.com/go-mojito/logger-zerolog"
@@ -44,9 +43,6 @@ func main() {
 	log.Info("Registering Kubernetes TLS Storage module")
 	caddyv2.RegisterModule(mojitolog.MojitoLog{})
 	caddyv2.RegisterModule(kubestore.KubeStore{})
-
-	log.Info("Starting Caddy server")
-	config.Reload()
 
 	mojito.GET("/ask", handlers.Ask)
 	mojito.ListenAndServe(":8123")

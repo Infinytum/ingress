@@ -23,7 +23,7 @@ usage:
 
 build:
 	@printf "$(blue)Building $(pink)$(if $(image),$(image),infinytum/ingress:dev)$(blue) image...$(reset)\n"
-	@docker build -t $(if $(image),$(image),infinytum/ingress:dev) .
+	@docker build -f Dockerfile.local -t $(if $(image),$(image),infinytum/ingress:dev) .
 
 push:
 	@printf "$(blue)Pushing $(pink)$(if $(image),$(image),infinytum/ingress:dev)$(blue) image...$(reset)\n"

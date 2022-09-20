@@ -6,6 +6,8 @@ import (
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/config"
+	"github.com/infinytum/ingress/internal/service"
+	"github.com/infinytum/injector"
 	"github.com/infinytum/reactive"
 )
 
@@ -36,6 +38,12 @@ func GlobalApply() reactive.Pipe {
 				}
 			}
 		})
+
+		injector.Call(func(state *service.State) {
+			delete(state.ConfiguredHosts, string(ctx.Ingress.UID))
+			state.ConfiguredHosts[string(ctx.Ingress.UID)] = ctx.Hosts
+		})
+
 		return errs
 	})
 }

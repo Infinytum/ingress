@@ -22,6 +22,7 @@ func (i *Ingress) Configure(ing *networkingv1.Ingress) {
 			Ingress: ing,
 			Mode:    ingress.ContextModeConfigure,
 		},
+		Hosts:  make([]string, 0),
 		Routes: make([]*caddyhttp.Route, 0),
 	})
 }
@@ -32,6 +33,7 @@ func (i *Ingress) Delete(ing *networkingv1.Ingress) {
 			Ingress: ing,
 			Mode:    ingress.ContextModeDelete,
 		},
+		Hosts:  make([]string, 0),
 		Routes: make([]*caddyhttp.Route, 0),
 	})
 }

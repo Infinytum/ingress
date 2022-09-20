@@ -35,6 +35,9 @@ func GlobalDiffuser(pipeline reactive.Subjectable) reactive.Pipe {
 		for _, specific := range specifics {
 			err := await(specific, pipeline)
 			if err == nil {
+				if specific.Rule.Host != "" {
+					ctx.Hosts = append(ctx.Hosts, specific.Rule.Host)
+				}
 				ctx.Routes = append(ctx.Routes, specific.Route)
 			}
 		}

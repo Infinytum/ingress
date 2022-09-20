@@ -50,6 +50,7 @@ func (s Context) RouteIdentifier() string {
 
 type GlobalContext struct {
 	Context
+	Hosts  []string
 	Routes []*caddyhttp.Route
 }
 

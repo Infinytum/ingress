@@ -1,28 +1,26 @@
 package handlers
 
 import (
-	"net"
-
 	"github.com/go-mojito/mojito"
 	"github.com/go-mojito/mojito/log"
+	"github.com/infinytum/ingress/internal/service"
 )
 
-func Ask(ctx mojito.Context, inftm *services.InfinytumService) error {
+func Ask(ctx mojito.Context, state *service.State) error {
 	domainToCheck := ctx.Request().GetRequest().FormValue("domain")
+	line := log.Field("domain", domainToCheck)
 	if domainToCheck == "" {
+		ctx.Response().GetWriter().WriteHeader(403)
+		line.Warn("[OnDemand TLS] No domain provided, rejecting certificate request by default.")
 		return ctx.String("No domain provided")
 	}
 
-	ips, err := net.LookupIP(domainToCheck)
-	if err != nil {
-		log.Errorf("Failed to resolve domain: %s", err)
+	if !state.IsHostConfigured(domainToCheck) {
+		ctx.Response().GetWriter().WriteHeader(403)
+		line.Debug("[OnDemand TLS] Domain is not configured on this caddy instance, rejecting certificate request.")
+		return ctx.String("Domain is not configured on this caddy instance, rejecting certificate request.")
 	}
 
-	for _, ip := range ips {
-		if !inftm.IsInfinytum(ip.String()) {
-			ctx.Response().WriteHeader(403)
-			return ctx.String("Domain is not pointing to Infinytum, make sure you have set up your DNS records correctly.")
-		}
-	}
-	return ctx.String("Domain is pointing to Infinytum, issue a certificate for it.")
+	line.Info("[OnDemand TLS] Caddy knows this domain, issue a certificate for it.")
+	return ctx.String("Caddy knows this domain, issue a certificate for it.")
 }

@@ -23,6 +23,7 @@ type Context struct {
 	OnDemandRateLimitInterval caddy.Duration `json:"onDemandTLSRateLimitInterval,omitempty"`
 	OnDemandRateLimitBurst    int            `json:"onDemandTLSRateLimitBurst,omitempty"`
 	OnDemandAsk               string         `json:"onDemandTLSAsk,omitempty"`
+	OnDemandInternalAsk       bool           `json:"onDemandTLSInternalAsk,omitempty"`
 
 	// General TLS Configuration
 	OCSPCheckInterval caddy.Duration `json:"ocspCheckInterval,omitempty"`

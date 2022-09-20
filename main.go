@@ -8,11 +8,13 @@ import (
 	"k8s.io/client-go/kubernetes"
 
 	zerolog "github.com/go-mojito/logger-zerolog"
+	"github.com/go-mojito/mojito"
 	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/injector"
 
 	caddyv2 "github.com/caddyserver/caddy/v2"
 	"github.com/infinytum/ingress/internal/service"
+	"github.com/infinytum/ingress/pkg/handlers"
 	"github.com/infinytum/ingress/pkg/modules/kubestore"
 	"github.com/infinytum/ingress/pkg/modules/mojitolog"
 
@@ -45,5 +47,7 @@ func main() {
 
 	log.Info("Starting Caddy server")
 	config.Reload()
-	select {}
+
+	mojito.GET("/ask", handlers.Ask)
+	mojito.ListenAndServe(":8123")
 }

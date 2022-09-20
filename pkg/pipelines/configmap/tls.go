@@ -37,12 +37,16 @@ func TLS() reactive.Pipe {
 
 			var onDemandConfig *caddytls.OnDemandConfig
 			if ctx.OnDemandTLS {
+				ask := ctx.OnDemandAsk
+				if ctx.OnDemandInternalAsk {
+					ask = "http://localhost:8123/ask"
+				}
 				onDemandConfig = &caddytls.OnDemandConfig{
 					RateLimit: &caddytls.RateLimit{
 						Interval: ctx.OnDemandRateLimitInterval,
 						Burst:    ctx.OnDemandRateLimitBurst,
 					},
-					Ask: ctx.OnDemandAsk,
+					Ask: ask,
 				}
 			}
 

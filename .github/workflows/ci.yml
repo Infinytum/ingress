@@ -13,29 +13,43 @@ jobs:
     env:
       TARGET_TAG: ${{ github.ref_name }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Sets env vars for release
+      - name: Setup Environment
         run: |
           echo "TARGET_TAG=latest" >> $GITHUB_ENV
         if: github.ref_name == 'main'
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.x
+          check-latest: true
 
-      - uses: docker/login-action@v2
+      - name: Build ingress
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/linux/amd64/ingress
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o bin/linux/arm64/ingress
+      
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker Login
+        uses: docker/login-action@v2
         with:
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - uses: docker/metadata-action@v4
+      - name: Docker Metadata
+        uses: docker/metadata-action@v4
         id: meta
         with:
           tags: ${{ env.TARGET_TAG }}
           images: docker.io/infinytum/ingress
-
-      - uses: docker/build-push-action@v3
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v3
         with:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64

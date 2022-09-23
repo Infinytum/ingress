@@ -39,7 +39,7 @@ var config Config = Config{
 					AutoHTTPS: &caddyhttp.AutoHTTPSConfig{
 						DisableRedir: true,
 					},
-					Listen: []string{":443"},
+					Listen: []string{":8443"},
 					TLSConnPolicies: caddytls.ConnectionPolicies{
 						&caddytls.ConnectionPolicy{},
 					},
@@ -48,7 +48,7 @@ var config Config = Config{
 					AutoHTTPS: &caddyhttp.AutoHTTPSConfig{
 						Disabled: true,
 					},
-					Listen: []string{":80"},
+					Listen: []string{":8080"},
 					Routes: []caddyhttp.Route{
 						{
 							HandlersRaw: []json.RawMessage{

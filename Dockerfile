@@ -1,7 +1,7 @@
-FROM gcr.io/distroless/static-debian11
+FROM gcr.io/distroless/static-debian11:nonroot
 ARG TARGETPLATFORM
 
-EXPOSE 80 443
-COPY bin/${TARGETPLATFORM}/ingress /
+EXPOSE 8080 8443
+COPY bin/${TARGETPLATFORM}/ingress /usr/bin/ingress
 
-ENTRYPOINT [ "/ingress" ]
+ENTRYPOINT [ "/usr/bin/ingress" ]

@@ -12,13 +12,18 @@ import (
 
 func TLS() reactive.Pipe {
 	return Pipe(func(ctx *Context, errs []error) []error {
-		if ctx.AcmeCA == "" && ctx.AcmeEmail == "" {
-			return errs
-		}
-
 		config.Edit(func(config *config.Config) {
 			tlsApp := config.GetTLSApp()
-			acmeIssuer := caddytls.ACMEIssuer{}
+			acmeIssuer := caddytls.ACMEIssuer{
+				Challenges: &caddytls.ChallengesConfig{
+					HTTP: &caddytls.HTTPChallengeConfig{
+						AlternatePort: 8080,
+					},
+					TLSALPN: &caddytls.TLSALPNChallengeConfig{
+						AlternatePort: 8443,
+					},
+				},
+			}
 
 			if ctx.AcmeCA != "" {
 				acmeIssuer.CA = ctx.AcmeCA

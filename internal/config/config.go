@@ -6,8 +6,6 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
-	"github.com/infinytum/ingress/internal/service"
-	"github.com/infinytum/injector"
 )
 
 var persist = false
@@ -61,10 +59,4 @@ var config Config = Config{
 			},
 		},
 	},
-}
-
-func init() {
-	injector.MustCall(func(ingressCfg service.IngressConfig) {
-		config.GetHTTPApp().ExperimentalHTTP3 = ingressCfg.HTTP3
-	})
 }

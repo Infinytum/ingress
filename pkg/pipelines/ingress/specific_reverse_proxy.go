@@ -1,6 +1,7 @@
 package ingress
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -9,7 +10,10 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy"
 	"github.com/infinytum/ingress/internal/annotations"
+	"github.com/infinytum/injector"
 	"github.com/infinytum/reactive"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 )
 
 type SupportedBackend string
@@ -45,6 +49,20 @@ func SpecificReverseProxy() reactive.Pipe {
 			}
 		default:
 			return append(errs, errors.New("Unsupported backend protocol: "+backend))
+		}
+
+		if ctx.Path.Backend.Service.Port.Number == 0 {
+			injector.Call(func(client *kubernetes.Clientset) {
+				srv, err := client.CoreV1().Services(ctx.Ingress.Namespace).Get(context.Background(), ctx.Path.Backend.Service.Name, metav1.GetOptions{})
+				if err != nil {
+					return
+				}
+				for _, port := range srv.Spec.Ports {
+					if port.Name == ctx.Path.Backend.Service.Port.Name {
+						ctx.Path.Backend.Service.Port.Number = port.Port
+					}
+				}
+			})
 		}
 
 		// Create the reverse proxy handler

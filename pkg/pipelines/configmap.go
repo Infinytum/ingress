@@ -35,6 +35,7 @@ func configmapFactory() *Configmap {
 
 	i.pipeline.Pipe(
 		configmap.TLS(),
+		configmap.Proxy(),
 	)
 
 	return i

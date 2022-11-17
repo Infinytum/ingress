@@ -20,6 +20,10 @@ func (c Config) GetHTTPApp() *caddyhttp.Server {
 	return c.Apps["http"].(*caddyhttp.App).Servers["https_server"]
 }
 
+func (c Config) GetRedirApp() *caddyhttp.Server {
+	return c.Apps["http"].(*caddyhttp.App).Servers["http_server"]
+}
+
 func (c Config) GetTLSApp() *caddytls.TLS {
 	return c.Apps["tls"].(*caddytls.TLS)
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/infinytum/ingress/pkg/handlers"
 	"github.com/infinytum/ingress/pkg/modules/kubestore"
 	"github.com/infinytum/ingress/pkg/modules/mojitolog"
+	"github.com/infinytum/ingress/pkg/modules/proxy"
 
 	zlog "github.com/rs/zerolog"
 )
@@ -43,6 +44,7 @@ func main() {
 	log.Info("Registering Kubernetes TLS Storage module")
 	caddyv2.RegisterModule(mojitolog.MojitoLog{})
 	caddyv2.RegisterModule(kubestore.KubeStore{})
+	caddyv2.RegisterModule(proxy.Proxy{})
 
 	mojito.GET("/ask", handlers.Ask)
 	mojito.ListenAndServe(":8123")

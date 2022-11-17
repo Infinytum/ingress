@@ -25,6 +25,10 @@ type Context struct {
 	OnDemandAsk               string         `json:"onDemandTLSAsk,omitempty"`
 	OnDemandInternalAsk       bool           `json:"onDemandTLSInternalAsk,omitempty"`
 
+	// Enable PROXY protocol support
+	ProxyProtocol           bool     `json:"proxyProtocol,omitempty"`
+	ProxyProtocolAllowedIPs []string `json:"proxyProtocolAllowedIPs,omitempty"`
+
 	// General TLS Configuration
 	OCSPCheckInterval caddy.Duration `json:"ocspCheckInterval,omitempty"`
 }

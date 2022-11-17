@@ -67,7 +67,7 @@ func (p *PodWatcher) refreshIps(clientset *kubernetes.Clientset) {
 		if svc.Spec.Selector == nil {
 			continue
 		}
-		if utils.IsSubset(p.pod.Labels, svc.Spec.Selector) {
+		if utils.IsSubset(svc.Spec.Selector, p.pod.Labels) {
 			if ips := utils.GetAddressesFromService(&svc); len(ips) > 0 {
 				serviceIps = append(serviceIps, ips...)
 			}

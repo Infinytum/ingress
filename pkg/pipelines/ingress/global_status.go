@@ -3,6 +3,7 @@ package ingress
 import (
 	"context"
 	"net"
+	"strings"
 
 	"github.com/infinytum/ingress/internal/service"
 	"github.com/infinytum/injector"
@@ -20,22 +21,32 @@ func GlobalStatus() reactive.Pipe {
 				return
 			}
 
-			lbs := []v1.LoadBalancerIngress{}
+			modified := false
 			for _, ip := range podWatcher.IPs() {
-				if net.ParseIP(ip) != nil {
-					lbs = append(lbs, v1.LoadBalancerIngress{IP: ip})
-				} else {
-					lbs = append(lbs, v1.LoadBalancerIngress{Hostname: ip})
+				for _, lb := range ctx.Ingress.Status.LoadBalancer.Ingress {
+					if lb.IP == ip || strings.EqualFold(lb.Hostname, ip) {
+						goto skip
+					}
 				}
+
+				if net.ParseIP(ip) != nil {
+					ctx.Ingress.Status.LoadBalancer.Ingress = append(ctx.Ingress.Status.LoadBalancer.Ingress, v1.LoadBalancerIngress{IP: ip})
+				} else {
+					ctx.Ingress.Status.LoadBalancer.Ingress = append(ctx.Ingress.Status.LoadBalancer.Ingress, v1.LoadBalancerIngress{Hostname: ip})
+				}
+				modified = true
+
+			skip:
 			}
 
-			ctx.Ingress.Status.LoadBalancer.Ingress = lbs
-			ing, err := clientset.NetworkingV1().Ingresses(ctx.Ingress.Namespace).UpdateStatus(context.TODO(), ctx.Ingress, metav1.UpdateOptions{})
-			if err != nil {
-				errs = append(errs, err)
-				return
+			if modified {
+				ing, err := clientset.NetworkingV1().Ingresses(ctx.Ingress.Namespace).UpdateStatus(context.TODO(), ctx.Ingress, metav1.UpdateOptions{})
+				if err != nil {
+					errs = append(errs, err)
+					return
+				}
+				ctx.Ingress = ing
 			}
-			ctx.Ingress = ing
 		})
 		if err != nil {
 			errs = append(errs, err)

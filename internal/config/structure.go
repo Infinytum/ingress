@@ -10,22 +10,27 @@ import (
 )
 
 type Config struct {
-	Admin   caddy.AdminConfig      `json:"admin,omitempty"`
-	Storage Storage                `json:"storage"`
-	Apps    map[string]interface{} `json:"apps"`
-	Logging caddy.Logging          `json:"logging"`
+	Admin   caddy.AdminConfig `json:"admin,omitempty"`
+	Storage Storage           `json:"storage"`
+	Apps    ConfigApps        `json:"apps"`
+	Logging caddy.Logging     `json:"logging"`
+}
+
+type ConfigApps struct {
+	TLS  *caddytls.TLS  `json:"tls,omitempty"`
+	HTTP *caddyhttp.App `json:"http,omitempty"`
 }
 
 func (c Config) GetHTTPApp() *caddyhttp.Server {
-	return c.Apps["http"].(*caddyhttp.App).Servers["https_server"]
+	return c.Apps.HTTP.Servers["https_server"]
 }
 
 func (c Config) GetRedirApp() *caddyhttp.Server {
-	return c.Apps["http"].(*caddyhttp.App).Servers["http_server"]
+	return c.Apps.HTTP.Servers["http_server"]
 }
 
 func (c Config) GetTLSApp() *caddytls.TLS {
-	return c.Apps["tls"].(*caddytls.TLS)
+	return c.Apps.TLS
 }
 
 func (c Config) GetTLSCertificates() (t TLSCertificates) {

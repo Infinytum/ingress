@@ -27,11 +27,11 @@ var config Config = Config{
 			},
 		},
 	},
-	Apps: map[string]interface{}{
-		"tls": &caddytls.TLS{CertificatesRaw: caddy.ModuleMap{
+	Apps: ConfigApps{
+		TLS: &caddytls.TLS{CertificatesRaw: caddy.ModuleMap{
 			"load_storage": json.RawMessage(`{"pairs": []}`),
 		}},
-		"http": &caddyhttp.App{
+		HTTP: &caddyhttp.App{
 			Servers: map[string]*caddyhttp.Server{
 				"https_server": {
 					AutoHTTPS: &caddyhttp.AutoHTTPSConfig{

@@ -14,7 +14,15 @@ import (
 // GlobalApply applies the routes to the caddy server
 func GlobalApply() reactive.Pipe {
 	return GlobalPipe(func(ctx *GlobalContext, errs []error) []error {
-		config.Edit(func(c *config.Config) {
+
+		if len(errs) > 0 {
+			for _, err := range errs {
+				log.Errorf("Error while configuring global ingress: %v", err)
+			}
+			return errs
+		}
+
+		err := config.Edit(func(c *config.Config) {
 			app := c.GetHTTPApp()
 
 			routes := make([]caddyhttp.Route, 0)
@@ -38,6 +46,12 @@ func GlobalApply() reactive.Pipe {
 				}
 			}
 		})
+
+		if err != nil {
+			log.Errorf("Error while applying ingress: %v", err)
+			errs = append(errs, err)
+			return errs
+		}
 
 		injector.Call(func(state *service.State) {
 			delete(state.ConfiguredHosts, string(ctx.Ingress.UID))

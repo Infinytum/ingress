@@ -11,7 +11,7 @@ func GlobalCustomTLS() reactive.Pipe {
 	hostMap := structures.NewMap[string, []string]()
 	secretMap := structures.NewMap[string, []string]()
 	return GlobalPipe(func(ctx *GlobalContext, errs []error) []error {
-		config.Edit(func(c *config.Config) {
+		err := config.Edit(func(c *config.Config) {
 			httpApp := c.GetHTTPApp()
 			knownHosts := hostMap.GetOrDefault(string(ctx.Ingress.UID), []string{})
 
@@ -59,6 +59,11 @@ func GlobalCustomTLS() reactive.Pipe {
 			}
 			c.SetTLSCertificates(certs)
 		})
+
+		if err != nil {
+			errs = append(errs, err)
+		}
+
 		return errs
 	})
 }

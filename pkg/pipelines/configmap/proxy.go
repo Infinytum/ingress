@@ -3,13 +3,14 @@ package configmap
 import (
 	"encoding/json"
 
+	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 )
 
 func Proxy() reactive.Pipe {
 	return Pipe(func(ctx *Context, errs []error) []error {
-		config.Edit(func(config *config.Config) {
+		err := config.Edit(func(config *config.Config) {
 			if ctx.ProxyProtocol {
 				allowedIps, err := json.Marshal(ctx.ProxyProtocolAllowedIPs)
 				if err != nil {
@@ -28,6 +29,11 @@ func Proxy() reactive.Pipe {
 				}
 			}
 		})
+
+		if err != nil {
+			log.Errorf("Error while configuring proxy protocol: %v", err)
+			errs = append(errs, err)
+		}
 
 		return errs
 	})

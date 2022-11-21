@@ -5,6 +5,7 @@ import (
 
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
+	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 	"github.com/mholt/acmez/acme"
@@ -12,7 +13,7 @@ import (
 
 func TLS() reactive.Pipe {
 	return Pipe(func(ctx *Context, errs []error) []error {
-		config.Edit(func(config *config.Config) {
+		err := config.Edit(func(config *config.Config) {
 			tlsApp := config.GetTLSApp()
 			acmeIssuer := caddytls.ACMEIssuer{
 				Challenges: &caddytls.ChallengesConfig{
@@ -68,6 +69,11 @@ func TLS() reactive.Pipe {
 				},
 			}
 		})
+
+		if err != nil {
+			log.Errorf("Error while configuring TLS: %v", err)
+			errs = append(errs, err)
+		}
 
 		return errs
 	})

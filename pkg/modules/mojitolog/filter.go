@@ -12,5 +12,9 @@ func filter(msg map[string]interface{}) bool {
 			return true
 		}
 	}
+	// Disable useless tls start stop logs
+	if val, ok := msg["logger"]; ok && val == "tls.cache.maintenance" {
+		return true
+	}
 	return false
 }

@@ -12,6 +12,13 @@ func filter(msg map[string]interface{}) bool {
 			return true
 		}
 	}
+
+	if val, ok := msg["server_name"]; ok && val == "metrics" {
+		if val, ok := msg["msg"]; ok && val == "automatic HTTPS is completely disabled for server" {
+			return true
+		}
+	}
+
 	// Disable useless tls start stop logs
 	if val, ok := msg["logger"]; ok && val == "tls.cache.maintenance" {
 		return true

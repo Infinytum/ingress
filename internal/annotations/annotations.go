@@ -22,6 +22,7 @@ const (
 	AnnotationKeepAlive                Annotation = "keepalive"
 	AnnotationProxyHTTPVersion         Annotation = "proxy-http-version"
 	AnnotationProxyNextUpstreamTimeout Annotation = "proxy-next-upstream-timeout"
+	AnnotationRewriteTarget            Annotation = "rewrite-target"
 	AnnotationSSLRedirect              Annotation = "ssl-redirect"
 	AnnotationTrustedProxies           Annotation = "trusted-proxies"
 )

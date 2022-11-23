@@ -32,9 +32,13 @@ func SpecificMatcher() reactive.Pipe {
 		// By default, the path matcher is a prefix matcher
 		switch *ctx.Path.PathType {
 		case v1.PathTypeImplementationSpecific, v1.PathTypePrefix:
-			modMap["path"] = caddyconfig.JSON(caddyhttp.MatchPath{ctx.Path.Path + "*"}, nil)
+			modMap["path_regexp"] = caddyconfig.JSON(caddyhttp.MatchPathRE{MatchRegexp: caddyhttp.MatchRegexp{
+				Pattern: ctx.Path.Path + ".*",
+			}}, nil)
 		case v1.PathTypeExact:
-			modMap["path"] = caddyconfig.JSON(caddyhttp.MatchPath{ctx.Path.Path}, nil)
+			modMap["path_regexp"] = caddyconfig.JSON(caddyhttp.MatchPathRE{MatchRegexp: caddyhttp.MatchRegexp{
+				Pattern: ctx.Path.Path,
+			}}, nil)
 		}
 
 		ctx.Route.MatcherSetsRaw = append(ctx.Route.MatcherSetsRaw, modMap)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth"
 	_ "github.com/caddyserver/caddy/v2/modules/logging"
 	_ "github.com/caddyserver/caddy/v2/modules/metrics"
 	_ "github.com/infinytum/ingress/internal/wiring"

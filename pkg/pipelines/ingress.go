@@ -60,6 +60,7 @@ func ingressFactory() *Ingress {
 		ingress.SpecificMarker(),
 		ingress.SpecificMatcher(),
 		ingress.SpecificHeaders(),
+		ingress.SpecificBasicAuth(),
 		ingress.SpecificRewriteTarget(),
 		ingress.SpecificReverseProxy(), // Must be last, because it creates the final route
 	)

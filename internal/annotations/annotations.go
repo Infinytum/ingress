@@ -25,6 +25,11 @@ const (
 	AnnotationRewriteTarget            Annotation = "rewrite-target"
 	AnnotationSSLRedirect              Annotation = "ssl-redirect"
 	AnnotationTrustedProxies           Annotation = "trusted-proxies"
+
+	// Basic Auth annotations
+	AnnotationBasicUsername Annotation = "basic-auth-username"
+	AnnotationBasicPassword Annotation = "basic-auth-password"
+	AnnotationBasicSalt     Annotation = "basic-auth-salt"
 )
 
 var namespaces = []string{annotationNamespace}

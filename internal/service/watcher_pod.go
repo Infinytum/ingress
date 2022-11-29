@@ -17,7 +17,7 @@ import (
 )
 
 func init() {
-	injector.Singleton(newPodWatcher)
+	injector.DeferredSingleton(newPodWatcher)
 }
 
 type PodWatcher struct {
@@ -83,7 +83,7 @@ func (p *PodWatcher) refreshIps(clientset *kubernetes.Clientset) {
 	}
 }
 
-func newPodWatcher() *PodWatcher {
+func newPodWatcher(clientset *kubernetes.Clientset) *PodWatcher {
 	podNamespace := os.Getenv("POD_NAMESPACE")
 	podName := os.Getenv("POD_NAME")
 	if podNamespace == "" || podName == "" {
@@ -94,28 +94,26 @@ func newPodWatcher() *PodWatcher {
 		namespace:  podNamespace,
 		serviceIps: make([]string, 0),
 	}
-	injector.MustCall(func(clientset *kubernetes.Clientset) {
-		pod, err := clientset.CoreV1().Pods(podNamespace).Get(context.TODO(), podName, metav1.GetOptions{})
-		if errors.IsNotFound(err) || pod == nil {
-			log.Error("Could not find pod in kubernetes, make sure POD_NAME and POD_NAMESPACE are set")
-			return
-		}
-		k.pod = pod
-		k.refreshIps(clientset)
+	pod, err := clientset.CoreV1().Pods(podNamespace).Get(context.TODO(), podName, metav1.GetOptions{})
+	if errors.IsNotFound(err) || pod == nil {
+		log.Error("Could not find pod in kubernetes, make sure POD_NAME and POD_NAMESPACE are set")
+		return nil
+	}
+	k.pod = pod
+	k.refreshIps(clientset)
 
-		informer := informers.NewSharedInformerFactoryWithOptions(
-			clientset,
-			resourcesSyncInterval,
-			informers.WithNamespace(podNamespace),
-		).Core().V1().Pods().Informer()
+	informer := informers.NewSharedInformerFactoryWithOptions(
+		clientset,
+		resourcesSyncInterval,
+		informers.WithNamespace(podNamespace),
+	).Core().V1().Pods().Informer()
 
-		informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-			AddFunc:    k.onAdd,
-			UpdateFunc: k.onUpdate,
-			DeleteFunc: nil,
-		})
-
-		go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
+	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc:    k.onAdd,
+		UpdateFunc: k.onUpdate,
+		DeleteFunc: nil,
 	})
+
+	go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
 	return k
 }

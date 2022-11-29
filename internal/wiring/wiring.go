@@ -10,19 +10,19 @@ import (
 
 func init() {
 	/** ConfigMap Service **/
-	injector.Singleton(func(pipeline *pipelines.Configmap) signals.ConfigMapUpdated {
+	injector.DeferredSingleton(func(pipeline *pipelines.Configmap) signals.ConfigMapUpdated {
 		return func(configMap *v1.ConfigMap) error {
 			return pipeline.Configure(configMap)
 		}
 	})
 
 	/** Ingress Service **/
-	injector.Singleton(func(pipeline *pipelines.Ingress) signals.IngressUpdated {
+	injector.DeferredSingleton(func(pipeline *pipelines.Ingress) signals.IngressUpdated {
 		return func(ingress *networkingv1.Ingress) {
 			pipeline.Configure(ingress)
 		}
 	})
-	injector.Singleton(func(pipeline *pipelines.Ingress) signals.IngressDeleted {
+	injector.DeferredSingleton(func(pipeline *pipelines.Ingress) signals.IngressDeleted {
 		return func(ingress *networkingv1.Ingress) {
 			pipeline.Delete(ingress)
 		}

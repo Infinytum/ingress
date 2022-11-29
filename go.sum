@@ -351,6 +351,10 @@ github.com/inconshreveable/mousetrap v1.0.1 h1:U3uMjPSQEBMNp1lFxmllqCPM6P5u/Xq7P
 github.com/inconshreveable/mousetrap v1.0.1/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/infinytum/injector v0.0.2 h1:isJZ27MvijpoQzzJaOWLqfyczp1EP9CM786Ef1KelFI=
 github.com/infinytum/injector v0.0.2/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
+github.com/infinytum/injector v0.0.3-0.20221129123503-5677b78ee2cb h1:tpRVMUmew4sw3jHPNgN8eJWhzXd6wUU4zGhphFVJvWI=
+github.com/infinytum/injector v0.0.3-0.20221129123503-5677b78ee2cb/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
+github.com/infinytum/injector v0.0.3 h1:E7oj58MCr0emxPSNoRgGvAUdLwJP797vbD1mRSoOBQg=
+github.com/infinytum/injector v0.0.3/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
 github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff h1:1wqj6u+mWJHtRij+ecV7xjXTlqZ5S9siUtBVnQsuf3Y=
 github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff/go.mod h1:qODHkTychKk/RVJHtmwfPGKkeaypnMZfzpqG1PFZXFw=
 github.com/infinytum/structures v0.0.2 h1:h/0EvNICrqynCKaKoO/6djR+cPLS2wj8KHAzPt0r4k0=

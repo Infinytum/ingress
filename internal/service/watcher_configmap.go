@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	injector.Singleton(newConfigMapWatcher)
+	injector.DeferredSingleton(newConfigMapWatcher)
 }
 
 type ConfigMapWatcher struct {
@@ -43,23 +43,21 @@ func (k *ConfigMapWatcher) onUpdate(oldObj, newObj interface{}) {
 	}
 }
 
-func newConfigMapWatcher() *ConfigMapWatcher {
+func newConfigMapWatcher(clientset *kubernetes.Clientset, podWatcher *PodWatcher) *ConfigMapWatcher {
 	k := &ConfigMapWatcher{}
 	injector.MustFill(k)
-	injector.MustCall(func(clientset *kubernetes.Clientset, podWatcher *PodWatcher) {
-		informer := informers.NewSharedInformerFactoryWithOptions(
-			clientset,
-			resourcesSyncInterval,
-			informers.WithNamespace(podWatcher.Namespace()),
-		).Core().V1().ConfigMaps().Informer()
+	informer := informers.NewSharedInformerFactoryWithOptions(
+		clientset,
+		resourcesSyncInterval,
+		informers.WithNamespace(podWatcher.Namespace()),
+	).Core().V1().ConfigMaps().Informer()
 
-		informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-			AddFunc:    k.onAdd,
-			UpdateFunc: k.onUpdate,
-			DeleteFunc: nil,
-		})
-
-		go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
+	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc:    k.onAdd,
+		UpdateFunc: k.onUpdate,
+		DeleteFunc: nil,
 	})
+
+	go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
 	return k
 }

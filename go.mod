@@ -9,7 +9,7 @@ require (
 	github.com/caddyserver/certmagic v0.17.2
 	github.com/go-mojito/logger-zerolog v0.0.0-20220913113120-5f9e29badcf5
 	github.com/go-mojito/mojito v0.0.13
-	github.com/infinytum/injector v0.0.2
+	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
 	github.com/infinytum/structures v0.0.2
 	github.com/mholt/acmez v1.0.4

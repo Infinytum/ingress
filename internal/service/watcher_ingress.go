@@ -17,7 +17,7 @@ const (
 )
 
 func init() {
-	injector.Singleton(newIngressWatcher)
+	injector.DeferredSingleton(newIngressWatcher)
 }
 
 type IngressWatcher struct {
@@ -65,23 +65,21 @@ func (k *IngressWatcher) onDelete(obj interface{}) {
 	}
 }
 
-func newIngressWatcher() *IngressWatcher {
+func newIngressWatcher(clientset *kubernetes.Clientset, config IngressConfig) *IngressWatcher {
 	k := &IngressWatcher{}
 	injector.MustFill(k)
-	injector.MustCall(func(clientset *kubernetes.Clientset, config IngressConfig) {
-		informer := informers.NewSharedInformerFactoryWithOptions(
-			clientset,
-			resourcesSyncInterval,
-			informers.WithNamespace(config.Namespace),
-		).Networking().V1().Ingresses().Informer()
+	informer := informers.NewSharedInformerFactoryWithOptions(
+		clientset,
+		resourcesSyncInterval,
+		informers.WithNamespace(config.Namespace),
+	).Networking().V1().Ingresses().Informer()
 
-		informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-			AddFunc:    k.onAdd,
-			UpdateFunc: k.onUpdate,
-			DeleteFunc: k.onDelete,
-		})
-
-		go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
+	informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc:    k.onAdd,
+		UpdateFunc: k.onUpdate,
+		DeleteFunc: k.onDelete,
 	})
+
+	go informer.Run(injector.MustInject[signals.Signal](signals.STOP))
 	return k
 }

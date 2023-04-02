@@ -1,5 +1,10 @@
 package mojitolog
 
+import (
+	"fmt"
+	"strings"
+)
+
 func filter(msg map[string]interface{}) bool {
 	// Only does HTTP -> HTTPS redirs, clutters log with useless warnings
 	if val, ok := msg["server_name"]; ok && val == "http_server" {
@@ -22,6 +27,12 @@ func filter(msg map[string]interface{}) bool {
 	// Disable useless tls start stop logs
 	if val, ok := msg["logger"]; ok && val == "tls.cache.maintenance" {
 		return true
+	}
+
+	if val, ok := msg["logger"]; ok && val == "tls" {
+		if val, ok := msg["error"]; ok && strings.Contains(fmt.Sprint(val), "cloudflare origin certificate") {
+			return true
+		}
 	}
 	return false
 }

@@ -15,31 +15,6 @@ func TLS() reactive.Pipe {
 	return Pipe(func(ctx *Context, errs []error) []error {
 		err := config.Edit(func(config *config.Config) {
 			tlsApp := config.GetTLSApp()
-			acmeIssuer := caddytls.ACMEIssuer{
-				Challenges: &caddytls.ChallengesConfig{
-					HTTP: &caddytls.HTTPChallengeConfig{
-						AlternatePort: 8080,
-					},
-					TLSALPN: &caddytls.TLSALPNChallengeConfig{
-						AlternatePort: 8443,
-					},
-				},
-			}
-
-			if ctx.AcmeCA != "" {
-				acmeIssuer.CA = ctx.AcmeCA
-			}
-
-			if ctx.AcmeEmail != "" {
-				acmeIssuer.Email = ctx.AcmeEmail
-			}
-
-			if ctx.AcmeEABKeyId != "" && ctx.AcmeEABMacKey != "" {
-				acmeIssuer.ExternalAccount = &acme.EAB{
-					KeyID:  ctx.AcmeEABKeyId,
-					MACKey: ctx.AcmeEABMacKey,
-				}
-			}
 
 			var onDemandConfig *caddytls.OnDemandConfig
 			if ctx.OnDemandTLS {
@@ -56,15 +31,24 @@ func TLS() reactive.Pipe {
 				}
 			}
 
+			issuersRaw := make([]json.RawMessage, 0)
+			if issuer := generateBuyPassIssuer(ctx); issuer != nil {
+				issuersRaw = append(issuersRaw, caddyconfig.JSONModuleObject(*issuer, "module", "acme", nil))
+			}
+			if issuer := generateZeroSSLIssuer(ctx); issuer != nil {
+				issuersRaw = append(issuersRaw, caddyconfig.JSONModuleObject(*issuer, "module", "acme", nil))
+			}
+			if issuer := generateLEIssuer(ctx); issuer != nil {
+				issuersRaw = append(issuersRaw, caddyconfig.JSONModuleObject(*issuer, "module", "acme", nil))
+			}
+
 			tlsApp.Automation = &caddytls.AutomationConfig{
 				OnDemand:          onDemandConfig,
 				OCSPCheckInterval: ctx.OCSPCheckInterval,
 				Policies: []*caddytls.AutomationPolicy{
 					{
-						IssuersRaw: []json.RawMessage{
-							caddyconfig.JSONModuleObject(acmeIssuer, "module", "acme", nil),
-						},
-						OnDemand: ctx.OnDemandTLS,
+						IssuersRaw: issuersRaw,
+						OnDemand:   ctx.OnDemandTLS,
 					},
 				},
 			}
@@ -77,4 +61,72 @@ func TLS() reactive.Pipe {
 
 		return errs
 	})
+}
+
+func generateBuyPassIssuer(ctx *Context) *caddytls.ACMEIssuer {
+
+	if ctx.AcmeEmail == "" {
+		return nil
+	}
+
+	return &caddytls.ACMEIssuer{
+		Challenges: &caddytls.ChallengesConfig{
+			HTTP: &caddytls.HTTPChallengeConfig{
+				AlternatePort: 8080,
+			},
+			TLSALPN: &caddytls.TLSALPNChallengeConfig{
+				AlternatePort: 8443,
+			},
+		},
+		CA:    "https://api.buypass.com/acme/directory",
+		Email: ctx.AcmeEmail,
+	}
+}
+
+func generateLEIssuer(ctx *Context) *caddytls.ACMEIssuer {
+
+	if ctx.AcmeEmail == "" {
+		return nil
+	}
+
+	return &caddytls.ACMEIssuer{
+		Challenges: &caddytls.ChallengesConfig{
+			HTTP: &caddytls.HTTPChallengeConfig{
+				AlternatePort: 8080,
+			},
+			TLSALPN: &caddytls.TLSALPNChallengeConfig{
+				AlternatePort: 8443,
+			},
+		},
+		CA:    "https://acme-v02.api.letsencrypt.org/directory",
+		Email: ctx.AcmeEmail,
+	}
+}
+
+func generateZeroSSLIssuer(ctx *Context) *caddytls.ACMEIssuer {
+
+	if ctx.AcmeEmail == "" {
+		return nil
+	}
+
+	if ctx.AcmeEABKeyId == "" || ctx.AcmeEABMacKey == "" {
+		return nil
+	}
+
+	return &caddytls.ACMEIssuer{
+		Challenges: &caddytls.ChallengesConfig{
+			HTTP: &caddytls.HTTPChallengeConfig{
+				AlternatePort: 8080,
+			},
+			TLSALPN: &caddytls.TLSALPNChallengeConfig{
+				AlternatePort: 8443,
+			},
+		},
+		CA:    "https://acme.zerossl.com/v2/DV90",
+		Email: ctx.AcmeEmail,
+		ExternalAccount: &acme.EAB{
+			KeyID:  ctx.AcmeEABKeyId,
+			MACKey: ctx.AcmeEABMacKey,
+		},
+	}
 }

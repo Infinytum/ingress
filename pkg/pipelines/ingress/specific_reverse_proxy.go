@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
@@ -40,7 +41,7 @@ func SpecificReverseProxy() reactive.Pipe {
 
 		// Configure backend protocol, if supported
 		backend := annotations.GetAnnotationOrDefault(ctx.Ingress.ObjectMeta, annotations.AnnotationBackendProtocol, string(BackendHTTP))
-		switch SupportedBackend(backend) {
+		switch SupportedBackend(strings.ToLower(backend)) {
 		case BackendHTTP: // Do nothing
 			break
 		case BackendHTTPS:

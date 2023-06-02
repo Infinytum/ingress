@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/bep/debounce v1.2.1
-	github.com/caddyserver/caddy v1.0.5
 	github.com/caddyserver/caddy/v2 v2.6.2
 	github.com/caddyserver/certmagic v0.17.2
 	github.com/go-mojito/logger-zerolog v0.0.0-20220913113120-5f9e29badcf5

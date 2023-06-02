@@ -5,8 +5,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/caddyserver/caddy/caddyfile"
 	"github.com/caddyserver/caddy/v2"
+	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	proxyproto "github.com/pires/go-proxyproto"
 )
 
@@ -42,7 +42,7 @@ func (w *Proxy) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			return d.ArgErr()
 		}
 
-		for d.NextBlock() {
+		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "timeout":
 				if !d.NextArg() {

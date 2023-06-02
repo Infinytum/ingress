@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/static-debian11:nonroot
+FROM cgr.dev/chainguard/static
 ARG TARGETPLATFORM
 
 EXPOSE 8080 8443

@@ -48,7 +48,7 @@ func GlobalApply() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Errorf("Error while applying ingress: %v", err)
+			log.Errorf("Error while applying ingress '%s/%s': %v", ctx.Ingress.Name, ctx.Ingress.Namespace, err)
 			errs = append(errs, err)
 			return errs
 		}

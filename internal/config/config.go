@@ -22,9 +22,11 @@ var config Config = Config{
 	Logging: caddy.Logging{
 		Logs: map[string]*caddy.CustomLog{
 			"default": {
-				WriterRaw:  json.RawMessage(`{"output":"mojito_log"}`),
-				EncoderRaw: json.RawMessage(`{"format":"json"}`),
-				Level:      "INFO",
+				BaseLog: caddy.BaseLog{
+					WriterRaw:  json.RawMessage(`{"output":"mojito_log"}`),
+					EncoderRaw: json.RawMessage(`{"format":"json"}`),
+					Level:      "INFO",
+				},
 			},
 		},
 	},

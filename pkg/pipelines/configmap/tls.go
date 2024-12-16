@@ -8,7 +8,7 @@ import (
 	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
-	"github.com/mholt/acmez/acme"
+	"github.com/mholt/acmez/v2/acme"
 )
 
 func TLS() reactive.Pipe {
@@ -23,10 +23,6 @@ func TLS() reactive.Pipe {
 					ask = "http://localhost:8123/ask"
 				}
 				onDemandConfig = &caddytls.OnDemandConfig{
-					RateLimit: &caddytls.RateLimit{
-						Interval: ctx.OnDemandRateLimitInterval,
-						Burst:    ctx.OnDemandRateLimitBurst,
-					},
 					Ask: ask,
 				}
 			}

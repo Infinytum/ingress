@@ -14,7 +14,6 @@ require (
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
 	github.com/infinytum/structures v0.0.2
 	github.com/mholt/acmez/v2 v2.0.1
-	github.com/mholt/caddy-l4 v0.0.0-20241111225910-3c6cc2c0ee08
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pires/go-proxyproto v0.7.0
 	github.com/pkg/errors v0.9.1
@@ -102,8 +101,8 @@ require (
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.48.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
-	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/quic-go v0.44.0 // indirect
+	github.com/quic-go/qpack v0.5.1 // indirect
+	github.com/quic-go/quic-go v0.48.2 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect

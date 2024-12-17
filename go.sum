@@ -262,8 +262,8 @@ github.com/infinytum/injector v0.0.3 h1:E7oj58MCr0emxPSNoRgGvAUdLwJP797vbD1mRSoO
 github.com/infinytum/injector v0.0.3/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
 github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff h1:1wqj6u+mWJHtRij+ecV7xjXTlqZ5S9siUtBVnQsuf3Y=
 github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff/go.mod h1:qODHkTychKk/RVJHtmwfPGKkeaypnMZfzpqG1PFZXFw=
-github.com/infinytum/structures v0.0.2 h1:h/0EvNICrqynCKaKoO/6djR+cPLS2wj8KHAzPt0r4k0=
-github.com/infinytum/structures v0.0.2/go.mod h1:4vDl7BamOX2fF0B+h2n/xGIorGv1u9ZQ9wgF6IW/Kc8=
+github.com/infinytum/structures v0.0.3 h1:OackN0CC4OKpUwp9esX/VbzIbdql2t9pccPWA1dZANI=
+github.com/infinytum/structures v0.0.3/go.mod h1:4vDl7BamOX2fF0B+h2n/xGIorGv1u9ZQ9wgF6IW/Kc8=
 github.com/jackc/chunkreader v1.0.0/go.mod h1:RT6O25fNZIuasFJRyZ4R/Y2BbhasbmZXF9QQ7T3kePo=
 github.com/jackc/chunkreader/v2 v2.0.0/go.mod h1:odVSm741yZoC3dpHEUXIqA9tQRhFrgOHwnPIn9lDKlk=
 github.com/jackc/chunkreader/v2 v2.0.1 h1:i+RDz65UE+mmpjTfyz0MoVTnzeYxroil2G82ki7MGG8=

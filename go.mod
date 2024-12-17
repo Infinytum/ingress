@@ -1,15 +1,14 @@
 module github.com/infinytum/ingress
 
 go 1.22.0
-
-toolchain go1.22.5
+toolchain go1.23.4
 
 require (
 	github.com/bep/debounce v1.2.1
 	github.com/caddyserver/caddy/v2 v2.8.4
 	github.com/caddyserver/certmagic v0.21.4
-	github.com/go-mojito/logger-zerolog v0.0.0-20220913113120-5f9e29badcf5
-	github.com/go-mojito/mojito v0.0.13
+	github.com/go-mojito/logger-zerolog v0.0.5
+	github.com/go-mojito/mojito v0.0.19
 	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
 	github.com/infinytum/structures v0.0.3
@@ -17,7 +16,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pires/go-proxyproto v0.8.0
 	github.com/pkg/errors v0.9.1
-	github.com/rs/zerolog v1.28.0
+	github.com/rs/zerolog v1.33.0
 	github.com/thoas/go-funk v0.9.3
 	k8s.io/api v0.25.2
 	k8s.io/apimachinery v0.25.2
@@ -69,6 +68,7 @@ require (
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/infinytum/introspector v0.0.0-20221124203324-542f216aab81 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.3 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -105,6 +105,9 @@ require (
 	github.com/quic-go/quic-go v0.48.2 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/samber/lo v1.44.0 // indirect
+	github.com/samber/slog-common v0.17.1 // indirect
+	github.com/samber/slog-zerolog/v2 v2.7.1 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/slackhq/nebula v1.7.2 // indirect
@@ -133,7 +136,7 @@ require (
 	golang.org/x/crypto/x509roots/fallback v0.0.0-20240507223354-67b13616a595 // indirect
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
 	golang.org/x/mod v0.18.0 // indirect
-	golang.org/x/net v0.30.0 // indirect
+	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/oauth2 v0.20.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect

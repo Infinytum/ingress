@@ -12,7 +12,7 @@ require (
 	github.com/go-mojito/mojito v0.0.13
 	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
-	github.com/infinytum/structures v0.0.2
+	github.com/infinytum/structures v0.0.3
 	github.com/mholt/acmez/v2 v2.0.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pires/go-proxyproto v0.7.0

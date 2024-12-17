@@ -21,7 +21,7 @@ jobs:
           echo "TARGET_TAG=latest" >> $GITHUB_ENV
         if: github.ref_name == 'main'
       - name: Setup QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
       - name: Setup Buildx
         uses: docker/setup-buildx-action@v2
       - name: Setup Go

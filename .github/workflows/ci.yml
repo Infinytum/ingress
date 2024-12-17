@@ -58,7 +58,7 @@ jobs:
           tags: ${{ env.TARGET_TAG }}
           images: docker.io/infinytum/ingress
       - name: Docker Build and Push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64

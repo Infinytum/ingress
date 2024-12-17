@@ -7,13 +7,13 @@ toolchain go1.22.5
 require (
 	github.com/bep/debounce v1.2.1
 	github.com/caddyserver/caddy/v2 v2.8.4
-	github.com/caddyserver/certmagic v0.21.3
+	github.com/caddyserver/certmagic v0.21.4
 	github.com/go-mojito/logger-zerolog v0.0.0-20220913113120-5f9e29badcf5
 	github.com/go-mojito/mojito v0.0.13
 	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
 	github.com/infinytum/structures v0.0.3
-	github.com/mholt/acmez/v2 v2.0.1
+	github.com/mholt/acmez/v2 v2.0.3
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pires/go-proxyproto v0.7.0
 	github.com/pkg/errors v0.9.1
@@ -81,7 +81,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
-	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/libdns/libdns v0.2.2 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/manifoldco/promptui v0.9.0 // indirect
@@ -119,7 +119,7 @@ require (
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/tailscale/tscert v0.0.0-20240517230440-bbccfbf48933 // indirect
 	github.com/urfave/cli v1.22.14 // indirect
-	github.com/zeebo/blake3 v0.2.3 // indirect
+	github.com/zeebo/blake3 v0.2.4 // indirect
 	go.etcd.io/bbolt v1.3.9 // indirect
 	go.step.sm/cli-utils v0.9.0 // indirect
 	go.step.sm/crypto v0.45.0 // indirect

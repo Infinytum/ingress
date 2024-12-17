@@ -18,7 +18,7 @@ require (
 	github.com/pires/go-proxyproto v0.7.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.28.0
-	github.com/thoas/go-funk v0.9.2
+	github.com/thoas/go-funk v0.9.3
 	k8s.io/api v0.25.2
 	k8s.io/apimachinery v0.25.2
 	k8s.io/client-go v0.25.2

@@ -15,7 +15,7 @@ require (
 	github.com/infinytum/structures v0.0.3
 	github.com/mholt/acmez/v2 v2.0.3
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/pires/go-proxyproto v0.7.0
+	github.com/pires/go-proxyproto v0.8.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.28.0
 	github.com/thoas/go-funk v0.9.3

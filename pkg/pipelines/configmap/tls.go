@@ -28,9 +28,9 @@ func TLS() reactive.Pipe {
 			}
 
 			issuersRaw := make([]json.RawMessage, 0)
-			if issuer := generateBuyPassIssuer(ctx); issuer != nil {
-				issuersRaw = append(issuersRaw, caddyconfig.JSONModuleObject(*issuer, "module", "acme", nil))
-			}
+			// if issuer := generateBuyPassIssuer(ctx); issuer != nil {
+			// 	issuersRaw = append(issuersRaw, caddyconfig.JSONModuleObject(*issuer, "module", "acme", nil))
+			// }
 			if issuer := generateZeroSSLIssuer(ctx); issuer != nil {
 				issuersRaw = append(issuersRaw, caddyconfig.JSONModuleObject(*issuer, "module", "acme", nil))
 			}

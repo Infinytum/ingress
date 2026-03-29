@@ -2,13 +2,13 @@ package handlers
 
 import (
 	"github.com/go-mojito/mojito"
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 	"github.com/infinytum/ingress/internal/service"
 )
 
 func Ask(ctx mojito.Context, state *service.State) error {
 	domainToCheck := ctx.Request().GetRequest().FormValue("domain")
-	line := log.With("domain", domainToCheck)
+	line := slog.With("domain", domainToCheck)
 	if domainToCheck == "" {
 		ctx.Response().GetWriter().WriteHeader(403)
 		line.Warn("[OnDemand TLS] No domain provided, rejecting certificate request by default.")

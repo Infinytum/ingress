@@ -4,7 +4,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
+
 	"github.com/infinytum/ingress/internal/signals"
 	"github.com/infinytum/ingress/pkg/utils"
 	"github.com/infinytum/injector"
@@ -49,7 +50,7 @@ func (p *PodWatcher) onUpdate(_, obj interface{}) {
 	}
 	p.pod = pod
 	if err := injector.Call(p.refreshIps); err != nil {
-		log.With("name", pod.Name, "namespace", pod.Namespace).Error("Error refreshing pod IPs", "error", err)
+		slog.With("name", pod.Name, "namespace", pod.Namespace).Error("Error refreshing pod IPs", "error", err)
 	}
 }
 
@@ -57,7 +58,7 @@ func (p *PodWatcher) refreshIps(clientset *kubernetes.Clientset) {
 	// Get services that may select this pod
 	svcs, err := clientset.CoreV1().Services(p.pod.Namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		log.With("name", p.pod.Name, "namespace", p.pod.Namespace).Error("Error getting services", "error", err)
+		slog.With("name", p.pod.Name, "namespace", p.pod.Namespace).Error("Error getting services", "error", err)
 		return
 	}
 
@@ -87,7 +88,8 @@ func newPodWatcher(clientset *kubernetes.Clientset) *PodWatcher {
 	podNamespace := os.Getenv("POD_NAMESPACE")
 	podName := os.Getenv("POD_NAME")
 	if podNamespace == "" || podName == "" {
-		log.Fatal("POD_NAMESPACE and POD_NAME must be set")
+		slog.Error("POD_NAMESPACE and POD_NAME must be set")
+		os.Exit(1)
 	}
 
 	k := &PodWatcher{
@@ -96,7 +98,7 @@ func newPodWatcher(clientset *kubernetes.Clientset) *PodWatcher {
 	}
 	pod, err := clientset.CoreV1().Pods(podNamespace).Get(context.TODO(), podName, metav1.GetOptions{})
 	if errors.IsNotFound(err) || pod == nil {
-		log.Error("Could not find pod in kubernetes, make sure POD_NAME and POD_NAMESPACE are set")
+		slog.Error("Could not find pod in kubernetes, make sure POD_NAME and POD_NAMESPACE are set")
 		return nil
 	}
 	k.pod = pod

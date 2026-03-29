@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 	"github.com/infinytum/ingress/internal/service"
 	"github.com/infinytum/injector"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -82,7 +82,7 @@ func GetAnnotationInt(t metav1.ObjectMeta, annotation Annotation, def int) int {
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		log.With("ingress", t.Name, "namespace", t.Namespace, "annotation", annotation).Error("Error parsing annotation", "error", err)
+		slog.With("ingress", t.Name, "namespace", t.Namespace, "annotation", annotation).Error("Error parsing annotation", "error", err)
 		return def
 	}
 	return intVal
@@ -97,7 +97,7 @@ func GetAnnotationList(t metav1.ObjectMeta, annotation Annotation, def []string)
 	}
 	if strings.HasPrefix(val, "[") {
 		if err := json.Unmarshal([]byte(val), &res); err != nil {
-			log.With("ingress", t.Name, "namespace", t.Namespace, "annotation", annotation).Error("Error parsing annotation", "error", err)
+			slog.With("ingress", t.Name, "namespace", t.Namespace, "annotation", annotation).Error("Error parsing annotation", "error", err)
 			return def
 		}
 		return res

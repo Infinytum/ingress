@@ -3,7 +3,7 @@ package configmap
 import (
 	"encoding/json"
 
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 )
@@ -31,7 +31,7 @@ func Proxy() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Error("Error while configuring proxy protocol", "error", err)
+			slog.Error("Error while configuring proxy protocol", "error", err)
 			errs = append(errs, err)
 		}
 

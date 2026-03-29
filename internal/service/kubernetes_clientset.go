@@ -3,7 +3,8 @@ package service
 import (
 	"time"
 
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
+	"os"
 	"github.com/infinytum/injector"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
@@ -28,7 +29,7 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 		return nil, err
 	}
 
-	log.Info("Creating API client", "host", cfg.Host)
+	slog.Info("Creating API client", "host", cfg.Host)
 
 	cfg.QPS = defaultQPS
 	cfg.Burst = defaultBurst
@@ -53,12 +54,12 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 	err = wait.ExponentialBackoff(defaultRetry, func() (bool, error) {
 		v, err := client.Discovery().ServerVersion()
 		if err == nil {
-			log.Info("Discovered kubernetes API server version", "version", v.String())
+			slog.Info("Discovered kubernetes API server version", "version", v.String())
 			return true, nil
 		}
 
 		lastErr = err
-		log.Info("Unexpected error discovering Kubernetes version", "attempt", retries, "error", err)
+		slog.Info("Unexpected error discovering Kubernetes version", "attempt", retries, "error", err)
 		retries++
 		return false, nil
 	})
@@ -69,7 +70,7 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 	}
 
 	if retries > 0 {
-		log.Warn("Initial connection to the Kubernetes API server was retried", "retries", retries)
+		slog.Warn("Initial connection to the Kubernetes API server was retried", "retries", retries)
 	}
 
 	return client, nil
@@ -78,10 +79,12 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 func newClientSet(config IngressConfig) *kubernetes.Clientset {
 	c, err := createApiserverClient(config)
 	if err != nil {
-		log.Fatal("Failed to create Kubernetes clientset", "error", err)
+		slog.Error("Failed to create Kubernetes clientset", "error", err)
+		os.Exit(1)
 	}
 	if c == nil {
-		log.Fatal("Kubernetes Clientset was nil")
+		slog.Error("Kubernetes Clientset was nil")
+		os.Exit(1)
 	}
 	return c
 }

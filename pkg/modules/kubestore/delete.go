@@ -3,7 +3,7 @@ package kubestore
 import (
 	"context"
 
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 	"github.com/infinytum/injector"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -20,7 +20,7 @@ func (k *KubeStore) Delete(ctx context.Context, key string) error {
 	_, err = client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.With("secret", name).Warn("Secret deletion requested, but secret does not exist. Continuing anyway.")
+			slog.With("secret", name).Warn("Secret deletion requested, but secret does not exist. Continuing anyway.")
 			return nil
 		}
 		return err

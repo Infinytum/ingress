@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/ingress/internal/service"
 	"github.com/infinytum/injector"
@@ -17,7 +17,7 @@ func GlobalApply() reactive.Pipe {
 
 		if len(errs) > 0 {
 			for _, err := range errs {
-				log.Error("Error while configuring global ingress", "error", err)
+				slog.Error("Error while configuring global ingress", "error", err)
 			}
 			return errs
 		}
@@ -40,7 +40,7 @@ func GlobalApply() reactive.Pipe {
 
 			app.Routes = routes
 			if !routesExist && ctx.Mode == ContextModeConfigure {
-				log.With("name", ctx.Ingress.Name, "namespace", ctx.Ingress.Namespace).Info("Reconfigured routes")
+				slog.With("name", ctx.Ingress.Name, "namespace", ctx.Ingress.Namespace).Info("Reconfigured routes")
 				for _, route := range ctx.Routes {
 					app.Routes = append(app.Routes, *route)
 				}
@@ -48,7 +48,7 @@ func GlobalApply() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Error("Error while applying ingress", "name", ctx.Ingress.Name, "namespace", ctx.Ingress.Namespace, "error", err)
+			slog.Error("Error while applying ingress", "name", ctx.Ingress.Name, "namespace", ctx.Ingress.Namespace, "error", err)
 			errs = append(errs, err)
 			return errs
 		}

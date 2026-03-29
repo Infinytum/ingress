@@ -35,13 +35,13 @@ var config Config = Config{
 			"load_storage": json.RawMessage(`{"pairs": []}`),
 		}},
 		HTTP: &caddyhttp.App{
+			Metrics: &caddyhttp.Metrics{},
 			Servers: map[string]*caddyhttp.Server{
 				"https_server": {
 					AutoHTTPS: &caddyhttp.AutoHTTPSConfig{
 						DisableRedir: true,
 					},
-					Listen:  []string{":8443"},
-					Metrics: &caddyhttp.Metrics{},
+					Listen: []string{":8443"},
 					TLSConnPolicies: caddytls.ConnectionPolicies{
 						&caddytls.ConnectionPolicy{},
 					},

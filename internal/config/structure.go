@@ -6,7 +6,7 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 )
 
 type Config struct {
@@ -36,7 +36,7 @@ func (c Config) GetTLSApp() *caddytls.TLS {
 func (c Config) GetTLSCertificates() (t TLSCertificates) {
 	tlsApp := c.GetTLSApp()
 	if err := json.Unmarshal(tlsApp.CertificatesRaw["load_storage"], &t); err != nil {
-		log.Error("Failed to unmarshal TLS Certificates configuration", "error", err)
+		slog.Error("Failed to unmarshal TLS Certificates configuration", "error", err)
 	}
 	return
 }
@@ -45,7 +45,7 @@ func (c Config) SetTLSCertificates(t TLSCertificates) {
 	tlsApp := c.GetTLSApp()
 	data, err := json.Marshal(t)
 	if err != nil {
-		log.Error("Failed to marshal TLS Certificates configuration", "error", err)
+		slog.Error("Failed to marshal TLS Certificates configuration", "error", err)
 		return
 	}
 	tlsApp.CertificatesRaw["load_storage"] = data

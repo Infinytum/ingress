@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 )
 
 type MojitoWriter struct {
@@ -31,7 +31,7 @@ func (m *MojitoWriter) Write(p []byte) (n int, err error) {
 		args = append(args, k, v)
 	}
 
-	line := log.With(args...)
+	line := slog.With(args...)
 	switch lvl {
 	case "debug":
 		line.Debug(msg)

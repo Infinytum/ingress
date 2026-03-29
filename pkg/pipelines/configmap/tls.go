@@ -5,7 +5,7 @@ import (
 
 	"github.com/caddyserver/caddy/v2/caddyconfig"
 	"github.com/caddyserver/caddy/v2/modules/caddytls"
-	"github.com/go-mojito/mojito/log"
+	"log/slog"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 	"github.com/mholt/acmez/v3/acme"
@@ -51,7 +51,7 @@ func TLS() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Error("Error while configuring TLS", "error", err)
+			slog.Error("Error while configuring TLS", "error", err)
 			errs = append(errs, err)
 		}
 

@@ -6,7 +6,6 @@ require (
 	github.com/bep/debounce v1.2.1
 	github.com/caddyserver/caddy/v2 v2.9.1
 	github.com/caddyserver/certmagic v0.21.6
-	github.com/go-mojito/logger-zerolog v0.0.5
 	github.com/go-mojito/mojito v0.0.19
 	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
@@ -16,6 +15,7 @@ require (
 	github.com/pires/go-proxyproto v0.11.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.35.0
+	github.com/samber/slog-zerolog/v2 v2.9.2
 	github.com/thoas/go-funk v0.9.3
 	k8s.io/api v0.32.3
 	k8s.io/apimachinery v0.32.3
@@ -102,7 +102,6 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/samber/lo v1.53.0 // indirect
 	github.com/samber/slog-common v0.21.0 // indirect
-	github.com/samber/slog-zerolog/v2 v2.9.2 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/slackhq/nebula v1.6.1 // indirect

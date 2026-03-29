@@ -8,7 +8,7 @@ import (
 	"github.com/infinytum/ingress/internal/service"
 	"github.com/infinytum/injector"
 	"github.com/infinytum/reactive"
-	v1 "k8s.io/api/core/v1"
+	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -30,9 +30,9 @@ func GlobalStatus() reactive.Pipe {
 				}
 
 				if net.ParseIP(ip) != nil {
-					ctx.Ingress.Status.LoadBalancer.Ingress = append(ctx.Ingress.Status.LoadBalancer.Ingress, v1.LoadBalancerIngress{IP: ip})
+					ctx.Ingress.Status.LoadBalancer.Ingress = append(ctx.Ingress.Status.LoadBalancer.Ingress, networkingv1.IngressLoadBalancerIngress{IP: ip})
 				} else {
-					ctx.Ingress.Status.LoadBalancer.Ingress = append(ctx.Ingress.Status.LoadBalancer.Ingress, v1.LoadBalancerIngress{Hostname: ip})
+					ctx.Ingress.Status.LoadBalancer.Ingress = append(ctx.Ingress.Status.LoadBalancer.Ingress, networkingv1.IngressLoadBalancerIngress{Hostname: ip})
 				}
 				modified = true
 

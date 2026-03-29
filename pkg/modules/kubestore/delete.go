@@ -20,7 +20,7 @@ func (k *KubeStore) Delete(ctx context.Context, key string) error {
 	_, err = client.CoreV1().Secrets(k.Namespace()).Get(ctx, name, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Field("secret", name).Warn("Secret deletion requested, but secret does not exist. Continuing anyway.")
+			log.With("secret", name).Warn("Secret deletion requested, but secret does not exist. Continuing anyway.")
 			return nil
 		}
 		return err

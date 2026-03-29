@@ -25,7 +25,13 @@ func (m *MojitoWriter) Write(p []byte) (n int, err error) {
 	fields := make(map[string]interface{})
 	flatten(rawFields, fields, "")
 
-	line := log.Fields(fields)
+	// Convert map to slog-style key-value args
+	args := make([]any, 0, len(fields)*2)
+	for k, v := range fields {
+		args = append(args, k, v)
+	}
+
+	line := log.With(args...)
 	switch lvl {
 	case "debug":
 		line.Debug(msg)
@@ -36,7 +42,7 @@ func (m *MojitoWriter) Write(p []byte) (n int, err error) {
 	case "error", "panic":
 		line.Error(msg)
 	case "fatal":
-		line.Fatal(msg)
+		line.Error(msg)
 	default:
 		line.Info(msg)
 	}

@@ -49,7 +49,7 @@ func (p *PodWatcher) onUpdate(_, obj interface{}) {
 	}
 	p.pod = pod
 	if err := injector.Call(p.refreshIps); err != nil {
-		log.Field("name", pod.Name).Field("namespace", pod.Namespace).Errorf("Error refreshing pod IPs: %s", err)
+		log.With("name", pod.Name, "namespace", pod.Namespace).Error("Error refreshing pod IPs", "error", err)
 	}
 }
 
@@ -57,7 +57,7 @@ func (p *PodWatcher) refreshIps(clientset *kubernetes.Clientset) {
 	// Get services that may select this pod
 	svcs, err := clientset.CoreV1().Services(p.pod.Namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		log.Field("name", p.pod.Name).Field("namespace", p.pod.Namespace).Errorf("Error getting services: %s", err)
+		log.With("name", p.pod.Name, "namespace", p.pod.Namespace).Error("Error getting services", "error", err)
 		return
 	}
 

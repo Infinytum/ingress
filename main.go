@@ -33,7 +33,7 @@ func main() {
 	log.Info("Discovering Kubernetes API server...")
 	_ = injector.MustInject[*kubernetes.Clientset]()
 	injector.MustCall(func(cfg service.IngressConfig) {
-		log.Infof("Loaded config: %+v", cfg)
+		log.Info("Loaded config", "config", cfg)
 	})
 
 	log.Info("Creating Pod Watcher")

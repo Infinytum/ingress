@@ -28,7 +28,7 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 		return nil, err
 	}
 
-	log.Infof("Creating API client for %s", cfg.Host)
+	log.Info("Creating API client", "host", cfg.Host)
 
 	cfg.QPS = defaultQPS
 	cfg.Burst = defaultBurst
@@ -53,12 +53,12 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 	err = wait.ExponentialBackoff(defaultRetry, func() (bool, error) {
 		v, err := client.Discovery().ServerVersion()
 		if err == nil {
-			log.Infof("Discovered kubernetes API server version %s", v.String())
+			log.Info("Discovered kubernetes API server version", "version", v.String())
 			return true, nil
 		}
 
 		lastErr = err
-		log.Infof("Unexpected error discovering Kubernetes version (attempt %v): %v", retries, err)
+		log.Info("Unexpected error discovering Kubernetes version", "attempt", retries, "error", err)
 		retries++
 		return false, nil
 	})
@@ -69,7 +69,7 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 	}
 
 	if retries > 0 {
-		log.Warnf("Initial connection to the Kubernetes API server was retried %d times.", retries)
+		log.Warn("Initial connection to the Kubernetes API server was retried", "retries", retries)
 	}
 
 	return client, nil
@@ -78,7 +78,7 @@ func createApiserverClient(config IngressConfig) (*kubernetes.Clientset, error) 
 func newClientSet(config IngressConfig) *kubernetes.Clientset {
 	c, err := createApiserverClient(config)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to create Kubernetes clientset", "error", err)
 	}
 	if c == nil {
 		log.Fatal("Kubernetes Clientset was nil")

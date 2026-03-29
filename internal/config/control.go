@@ -60,12 +60,12 @@ func Read() Config {
 func Reload() {
 	j, err := json.Marshal(config)
 	if err != nil {
-		log.Errorf("Failed to marshal config: %v", err)
+		log.Error("Failed to marshal config", "error", err)
 		return
 	}
 	err = caddy.Load(j, false)
 	if err != nil {
-		log.Errorf("Failed to load config: %v", err)
+		log.Error("Failed to load config", "error", err)
 		return
 	}
 }

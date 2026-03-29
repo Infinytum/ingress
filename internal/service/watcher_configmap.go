@@ -26,7 +26,7 @@ func (k *ConfigMapWatcher) IsManagedByController(cm v1.ConfigMap) bool {
 func (k *ConfigMapWatcher) onAdd(obj interface{}) {
 	configMap, ok := obj.(*v1.ConfigMap)
 	if ok && k.IsManagedByController(*configMap) {
-		log.Field("name", configMap.Name).Field("namespace", configMap.Namespace).Info("Ingress configuration loaded")
+		log.With("name", configMap.Name, "namespace", configMap.Namespace).Info("Ingress configuration loaded")
 		if k.onConfigMapUpdate != nil {
 			k.onConfigMapUpdate(configMap)
 		}
@@ -36,7 +36,7 @@ func (k *ConfigMapWatcher) onAdd(obj interface{}) {
 func (k *ConfigMapWatcher) onUpdate(oldObj, newObj interface{}) {
 	configMap, ok := newObj.(*v1.ConfigMap)
 	if ok && k.IsManagedByController(*configMap) {
-		log.Field("name", configMap.Name).Field("namespace", configMap.Namespace).Info("Ingress configuration reloaded")
+		log.With("name", configMap.Name, "namespace", configMap.Namespace).Info("Ingress configuration reloaded")
 		if k.onConfigMapUpdate != nil {
 			k.onConfigMapUpdate(configMap)
 		}

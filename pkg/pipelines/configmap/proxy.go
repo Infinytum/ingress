@@ -31,7 +31,7 @@ func Proxy() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Errorf("Error while configuring proxy protocol: %v", err)
+			log.Error("Error while configuring proxy protocol", "error", err)
 			errs = append(errs, err)
 		}
 

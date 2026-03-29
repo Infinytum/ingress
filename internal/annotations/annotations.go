@@ -82,10 +82,7 @@ func GetAnnotationInt(t metav1.ObjectMeta, annotation Annotation, def int) int {
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		log.
-			Field("ingress", t.Name).
-			Field("namespace", t.Namespace).
-			Field("annotation", annotation).Errorf("Error parsing annotation: %s", err)
+		log.With("ingress", t.Name, "namespace", t.Namespace, "annotation", annotation).Error("Error parsing annotation", "error", err)
 		return def
 	}
 	return intVal
@@ -100,10 +97,7 @@ func GetAnnotationList(t metav1.ObjectMeta, annotation Annotation, def []string)
 	}
 	if strings.HasPrefix(val, "[") {
 		if err := json.Unmarshal([]byte(val), &res); err != nil {
-			log.
-				Field("ingress", t.Name).
-				Field("namespace", t.Namespace).
-				Field("annotation", annotation).Errorf("Error parsing annotation: %s", err)
+			log.With("ingress", t.Name, "namespace", t.Namespace, "annotation", annotation).Error("Error parsing annotation", "error", err)
 			return def
 		}
 		return res

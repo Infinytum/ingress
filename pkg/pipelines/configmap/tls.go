@@ -8,7 +8,7 @@ import (
 	"github.com/go-mojito/mojito/log"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
-	"github.com/mholt/acmez/v2/acme"
+	"github.com/mholt/acmez/v3/acme"
 )
 
 func TLS() reactive.Pipe {
@@ -51,7 +51,7 @@ func TLS() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Errorf("Error while configuring TLS: %v", err)
+			log.Error("Error while configuring TLS", "error", err)
 			errs = append(errs, err)
 		}
 

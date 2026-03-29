@@ -17,7 +17,7 @@ func GlobalApply() reactive.Pipe {
 
 		if len(errs) > 0 {
 			for _, err := range errs {
-				log.Errorf("Error while configuring global ingress: %v", err)
+				log.Error("Error while configuring global ingress", "error", err)
 			}
 			return errs
 		}
@@ -40,7 +40,7 @@ func GlobalApply() reactive.Pipe {
 
 			app.Routes = routes
 			if !routesExist && ctx.Mode == ContextModeConfigure {
-				log.Field("name", ctx.Ingress.Name).Field("namespace", ctx.Ingress.Namespace).Info("Reconfigured routes")
+				log.With("name", ctx.Ingress.Name, "namespace", ctx.Ingress.Namespace).Info("Reconfigured routes")
 				for _, route := range ctx.Routes {
 					app.Routes = append(app.Routes, *route)
 				}
@@ -48,7 +48,7 @@ func GlobalApply() reactive.Pipe {
 		})
 
 		if err != nil {
-			log.Errorf("Error while applying ingress '%s/%s': %v", ctx.Ingress.Name, ctx.Ingress.Namespace, err)
+			log.Error("Error while applying ingress", "name", ctx.Ingress.Name, "namespace", ctx.Ingress.Namespace, "error", err)
 			errs = append(errs, err)
 			return errs
 		}

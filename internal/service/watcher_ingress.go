@@ -38,7 +38,7 @@ func (k *IngressWatcher) IsManagedByController(ingress networkingv1.Ingress) boo
 func (k *IngressWatcher) onAdd(obj interface{}) {
 	ingress, ok := obj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
-		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Info("Discovered ingress")
+		log.With("name", ingress.Name, "namespace", ingress.Namespace).Info("Discovered ingress")
 		if k.onIngressUpdate != nil {
 			k.onIngressUpdate(ingress)
 		}
@@ -48,7 +48,7 @@ func (k *IngressWatcher) onAdd(obj interface{}) {
 func (k *IngressWatcher) onUpdate(oldObj, newObj interface{}) {
 	ingress, ok := newObj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
-		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Debug("Updated ingress")
+		log.With("name", ingress.Name, "namespace", ingress.Namespace).Debug("Updated ingress")
 		if k.onIngressUpdate != nil {
 			k.onIngressUpdate(ingress)
 		}
@@ -58,7 +58,7 @@ func (k *IngressWatcher) onUpdate(oldObj, newObj interface{}) {
 func (k *IngressWatcher) onDelete(obj interface{}) {
 	ingress, ok := obj.(*networkingv1.Ingress)
 	if ok && k.IsManagedByController(*ingress) {
-		log.Field("name", ingress.Name).Field("namespace", ingress.Namespace).Info("Deleted ingress")
+		log.With("name", ingress.Name, "namespace", ingress.Namespace).Info("Deleted ingress")
 		if k.onIngressDelete != nil {
 			k.onIngressDelete(ingress)
 		}

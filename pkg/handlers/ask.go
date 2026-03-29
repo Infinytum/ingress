@@ -8,7 +8,7 @@ import (
 
 func Ask(ctx mojito.Context, state *service.State) error {
 	domainToCheck := ctx.Request().GetRequest().FormValue("domain")
-	line := log.Field("domain", domainToCheck)
+	line := log.With("domain", domainToCheck)
 	if domainToCheck == "" {
 		ctx.Response().GetWriter().WriteHeader(403)
 		line.Warn("[OnDemand TLS] No domain provided, rejecting certificate request by default.")

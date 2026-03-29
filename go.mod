@@ -1,8 +1,6 @@
 module github.com/infinytum/ingress
 
-go 1.22.0
-
-toolchain go1.22.5
+go 1.26.0
 
 require (
 	github.com/bep/debounce v1.2.1

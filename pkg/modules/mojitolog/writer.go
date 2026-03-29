@@ -33,8 +33,7 @@ func (m *MojitoWriter) Write(p []byte) (n int, err error) {
 		line.Info(msg)
 	case "warn":
 		line.Warn(msg)
-	case "error":
-	case "panic":
+	case "error", "panic":
 		line.Error(msg)
 	case "fatal":
 		line.Fatal(msg)

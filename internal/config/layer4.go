@@ -22,8 +22,9 @@ type Layer4Config struct {
 
 // Layer4Server represents a layer4 server.
 type Layer4Server struct {
-	Listen []string      `json:"listen"`
-	Routes []Layer4Route `json:"routes,omitempty"`
+	Listen          []string      `json:"listen"`
+	Routes          []Layer4Route `json:"routes,omitempty"`
+	MaxMatchingBytes int          `json:"max_matching_bytes,omitempty"`
 }
 
 // Layer4Route represents a layer4 route with matchers and handlers.

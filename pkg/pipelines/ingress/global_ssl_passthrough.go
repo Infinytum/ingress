@@ -88,8 +88,9 @@ func GlobalSSLPassthrough() reactive.Pipe {
 			l4 := &config.Layer4Config{
 				Servers: map[string]*config.Layer4Server{
 					"ssl_mux": {
-						Listen: []string{config.ExternalHTTPSAddr},
-						Routes: routes,
+						Listen:           []string{config.ExternalHTTPSAddr},
+						Routes:           routes,
+						MaxMatchingBytes: 4096,
 					},
 				},
 			}

@@ -50,6 +50,7 @@ func ingressFactory() *Ingress {
 	// Global Pipeline (Processes whole ingress objects)
 	i.pipeline.Pipe(
 		ingress.GlobalDiffuser(i.pipeline), // Calls the specific pipeline
+		ingress.GlobalSSLPassthrough(),     // Handle SSL passthrough before HTTP apply
 		ingress.GlobalApply(),
 		ingress.GlobalCustomTLS(),
 		ingress.GlobalStatus(),

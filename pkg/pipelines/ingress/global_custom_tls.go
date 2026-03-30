@@ -1,6 +1,7 @@
 package ingress
 
 import (
+	"github.com/infinytum/ingress/internal/annotations"
 	"github.com/infinytum/ingress/internal/config"
 	"github.com/infinytum/reactive"
 	"github.com/infinytum/structures"
@@ -11,6 +12,11 @@ func GlobalCustomTLS() reactive.Pipe {
 	hostMap := structures.NewMap[string, []string]()
 	secretMap := structures.NewMap[string, []string]()
 	return GlobalPipe(func(ctx *GlobalContext, errs []error) []error {
+		// SSL passthrough ingresses don't need TLS certificate management
+		if annotations.GetAnnotationBool(ctx.Ingress.ObjectMeta, annotations.AnnotationSSLPassthrough, false) {
+			return errs
+		}
+
 		err := config.Edit(func(c *config.Config) {
 			httpApp := c.GetHTTPApp()
 			knownHosts := hostMap.GetOrDefault(string(ctx.Ingress.UID), []string{})

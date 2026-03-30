@@ -17,8 +17,9 @@ type Config struct {
 }
 
 type ConfigApps struct {
-	TLS  *caddytls.TLS  `json:"tls,omitempty"`
-	HTTP *caddyhttp.App `json:"http,omitempty"`
+	TLS    *caddytls.TLS   `json:"tls,omitempty"`
+	HTTP   *caddyhttp.App  `json:"http,omitempty"`
+	Layer4 json.RawMessage `json:"layer4,omitempty"`
 }
 
 func (c Config) GetHTTPApp() *caddyhttp.Server {

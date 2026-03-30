@@ -11,6 +11,7 @@ require (
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
 	github.com/infinytum/structures v0.0.3
 	github.com/mholt/acmez/v3 v3.1.6
+	github.com/mholt/caddy-l4 v0.1.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pires/go-proxyproto v0.11.0
 	github.com/pkg/errors v0.9.1

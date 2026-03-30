@@ -5,6 +5,8 @@ import (
 	_ "github.com/caddyserver/caddy/v2/modules/logging"
 	_ "github.com/caddyserver/caddy/v2/modules/metrics"
 	_ "github.com/infinytum/ingress/internal/wiring"
+	_ "github.com/mholt/caddy-l4/modules/l4proxy"
+	_ "github.com/mholt/caddy-l4/modules/l4tls"
 
 	"k8s.io/client-go/kubernetes"
 

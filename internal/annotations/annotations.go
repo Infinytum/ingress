@@ -26,6 +26,9 @@ const (
 	AnnotationSSLRedirect              Annotation = "ssl-redirect"
 	AnnotationTrustedProxies           Annotation = "trusted-proxies"
 
+	// SSL Passthrough
+	AnnotationSSLPassthrough Annotation = "ssl-passthrough"
+
 	// Basic Auth annotations
 	AnnotationBasicUsername Annotation = "basic-auth-username"
 	AnnotationBasicPassword Annotation = "basic-auth-password"

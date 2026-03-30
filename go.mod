@@ -5,7 +5,7 @@ go 1.26.0
 require (
 	github.com/bep/debounce v1.2.1
 	github.com/caddyserver/caddy/v2 v2.9.1
-	github.com/caddyserver/certmagic v0.21.6
+	github.com/caddyserver/certmagic v0.25.2
 	github.com/go-mojito/mojito v0.0.19
 	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/reactive v0.0.0-20201021112637-66f189b4dfff
@@ -76,7 +76,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/klauspost/compress v1.18.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
-	github.com/libdns/libdns v0.2.2 // indirect
+	github.com/libdns/libdns v1.1.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/manifoldco/promptui v0.9.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect

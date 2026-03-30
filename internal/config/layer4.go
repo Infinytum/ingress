@@ -52,10 +52,14 @@ func BuildPassthroughRoute(host, dial string) Layer4Route {
 	}
 }
 
-// BuildCatchAllRoute builds the catch-all layer4 route that forwards the raw
-// TLS connection to the internal HTTP server, which handles TLS termination itself.
+// BuildCatchAllRoute builds the catch-all layer4 route that matches any TLS
+// connection and forwards it to the internal HTTP server for TLS termination.
+// The empty TLS matcher ensures caddy-l4 replays the peeked ClientHello bytes.
 func BuildCatchAllRoute() Layer4Route {
 	return Layer4Route{
+		Match: []json.RawMessage{
+			json.RawMessage(`{"tls":{}}`),
+		},
 		Handle: []json.RawMessage{
 			json.RawMessage(fmt.Sprintf(`{"handler":"proxy","upstreams":[{"dial":[%q]}]}`, InternalHTTPSAddr)),
 		},

@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"os"
+	"sync"
+	"time"
 
 	"log/slog"
 
@@ -22,6 +24,7 @@ func init() {
 }
 
 type PodWatcher struct {
+	mu         sync.RWMutex
 	namespace  string
 	pod        *apiv1.Pod
 	nodeIp     string
@@ -33,10 +36,17 @@ func (p *PodWatcher) Namespace() string {
 }
 
 func (p *PodWatcher) IPs() []string {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
 	if p.nodeIp == "" {
-		return p.serviceIps
+		ips := make([]string, len(p.serviceIps))
+		copy(ips, p.serviceIps)
+		return ips
 	}
-	return append(p.serviceIps, p.nodeIp)
+	ips := make([]string, len(p.serviceIps)+1)
+	copy(ips, p.serviceIps)
+	ips[len(p.serviceIps)] = p.nodeIp
+	return ips
 }
 
 func (p *PodWatcher) onAdd(obj interface{}) {
@@ -55,8 +65,11 @@ func (p *PodWatcher) onUpdate(_, obj interface{}) {
 }
 
 func (p *PodWatcher) refreshIps(clientset *kubernetes.Clientset) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// Get services that may select this pod
-	svcs, err := clientset.CoreV1().Services(p.pod.Namespace).List(context.TODO(), metav1.ListOptions{})
+	svcs, err := clientset.CoreV1().Services(p.pod.Namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		slog.With("name", p.pod.Name, "namespace", p.pod.Namespace).Error("Error getting services", "error", err)
 		return
@@ -74,6 +87,9 @@ func (p *PodWatcher) refreshIps(clientset *kubernetes.Clientset) {
 			}
 		}
 	}
+
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	p.serviceIps = serviceIps
 
 	// Compatibility with hostPort deployments
@@ -96,7 +112,9 @@ func newPodWatcher(clientset *kubernetes.Clientset) *PodWatcher {
 		namespace:  podNamespace,
 		serviceIps: make([]string, 0),
 	}
-	pod, err := clientset.CoreV1().Pods(podNamespace).Get(context.TODO(), podName, metav1.GetOptions{})
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	pod, err := clientset.CoreV1().Pods(podNamespace).Get(ctx, podName, metav1.GetOptions{})
 	if errors.IsNotFound(err) || pod == nil {
 		slog.Error("Could not find pod in kubernetes, make sure POD_NAME and POD_NAMESPACE are set")
 		return nil

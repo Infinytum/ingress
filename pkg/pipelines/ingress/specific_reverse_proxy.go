@@ -54,7 +54,9 @@ func SpecificReverseProxy() reactive.Pipe {
 
 		if ctx.Path.Backend.Service.Port.Number == 0 {
 			injector.Call(func(client *kubernetes.Clientset) {
-				srv, err := client.CoreV1().Services(ctx.Ingress.Namespace).Get(context.Background(), ctx.Path.Backend.Service.Name, metav1.GetOptions{})
+				lookupCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+				defer cancel()
+				srv, err := client.CoreV1().Services(ctx.Ingress.Namespace).Get(lookupCtx, ctx.Path.Backend.Service.Name, metav1.GetOptions{})
 				if err != nil {
 					return
 				}

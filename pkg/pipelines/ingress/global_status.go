@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"strings"
+	"time"
 
 	"github.com/infinytum/ingress/internal/service"
 	"github.com/infinytum/injector"
@@ -40,7 +41,9 @@ func GlobalStatus() reactive.Pipe {
 			}
 
 			if modified {
-				ing, err := clientset.NetworkingV1().Ingresses(ctx.Ingress.Namespace).UpdateStatus(context.TODO(), ctx.Ingress, metav1.UpdateOptions{})
+				updateCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+				defer cancel()
+				ing, err := clientset.NetworkingV1().Ingresses(ctx.Ingress.Namespace).UpdateStatus(updateCtx, ctx.Ingress, metav1.UpdateOptions{})
 				if err != nil {
 					errs = append(errs, err)
 					return

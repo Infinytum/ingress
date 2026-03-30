@@ -12,6 +12,7 @@ import (
 	"os"
 
 	"github.com/go-mojito/mojito"
+	"github.com/infinytum/ingress/internal/signals"
 	"github.com/infinytum/injector"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -51,5 +52,32 @@ func main() {
 	caddyv2.RegisterModule(proxy.Proxy{})
 
 	mojito.GET("/ask", handlers.Ask)
-	mojito.ListenAndServe(":8123")
+
+	// Start HTTP server in background
+	go func() {
+		if err := mojito.ListenAndServe(":8123"); err != nil {
+			slog.Error("HTTP server error", "error", err)
+		}
+	}()
+
+	// Wait for interrupt signal
+	interrupt := injector.MustInject[signals.Signal](signals.INTERRUPT)
+	<-interrupt
+	slog.Info("Shutting down gracefully...")
+
+	// Signal informers to stop
+	stop := injector.MustInject[signals.Signal](signals.STOP)
+	stop <- struct{}{}
+
+	// Shutdown Mojito HTTP server
+	if err := mojito.Shutdown(); err != nil {
+		slog.Error("HTTP server shutdown error", "error", err)
+	}
+
+	// Shutdown Caddy
+	if err := caddyv2.Stop(); err != nil {
+		slog.Error("Caddy shutdown error", "error", err)
+	}
+
+	slog.Info("Shutdown complete")
 }

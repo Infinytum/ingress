@@ -1,6 +1,8 @@
 package kubestore
 
 import (
+	"os"
+
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/certmagic"
 	"github.com/infinytum/ingress/internal/service"
@@ -26,8 +28,12 @@ func (KubeStore) Namespace() string {
 
 func (KubeStore) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
-		ID:  "caddy.storage.kubestore",
-		New: func() caddy.Module { return new(KubeStore) },
+		ID: "caddy.storage.kubestore",
+		New: func() caddy.Module {
+			return &KubeStore{
+				LeaseId: os.Getenv("POD_NAME"),
+			}
+		},
 	}
 }
 

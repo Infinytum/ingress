@@ -54,8 +54,7 @@ func GlobalApply() reactive.Pipe {
 		}
 
 		injector.Call(func(state *service.State) {
-			delete(state.ConfiguredHosts, string(ctx.Ingress.UID))
-			state.ConfiguredHosts[string(ctx.Ingress.UID)] = ctx.Hosts
+			state.SetHosts(string(ctx.Ingress.UID), ctx.Hosts)
 		})
 
 		return errs

@@ -53,12 +53,16 @@ func AsCaddyConfig(cfg Config) (*caddy.Config, error) {
 // Read returns a copy of the current caddy config.
 // Any modifications will be lost and never applied.
 func Read() Config {
+	rwlock.RLock()
+	defer rwlock.RUnlock()
 	copy := config
 	return copy
 }
 
 func Reload() {
+	rwlock.RLock()
 	j, err := json.Marshal(config)
+	rwlock.RUnlock()
 	if err != nil {
 		slog.Error("Failed to marshal config", "error", err)
 		return

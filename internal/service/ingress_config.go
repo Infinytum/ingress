@@ -42,7 +42,6 @@ func (c IngressConfig) String() string {
 }
 
 func newIngressConfig() IngressConfig {
-	flag.Parse()
 	return IngressConfig{
 		ClassName:        *className,
 		ConfigMap:        *configMap,

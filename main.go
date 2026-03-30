@@ -8,6 +8,7 @@ import (
 
 	"k8s.io/client-go/kubernetes"
 
+	"flag"
 	"log/slog"
 	"os"
 
@@ -33,6 +34,7 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
 	slog.Info("Discovering Kubernetes API server...")
 	_ = injector.MustInject[*kubernetes.Clientset]()
 	injector.MustCall(func(cfg service.IngressConfig) {

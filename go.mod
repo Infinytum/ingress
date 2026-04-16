@@ -13,7 +13,7 @@ require (
 	github.com/mholt/acmez/v3 v3.1.6
 	github.com/mholt/caddy-l4 v0.1.0
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/pires/go-proxyproto v0.11.0
+	github.com/pires/go-proxyproto v0.12.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.35.0
 	github.com/samber/slog-zerolog/v2 v2.9.2
